@@ -21,13 +21,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export function AppSidebar({ 
-  header = "Stakeholder Portal", 
+export function AppSidebar({
+  header = "Stakeholder Portal",
   value = "stakeholder",
-  ...props 
-}: React.ComponentProps<typeof Sidebar> & { 
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
   header?: string,
-  value?: "admin" | "barangay" | "stakeholder" 
+  value?: "admin" | "barangay" | "stakeholder"
 }) {
   const adminNav = [
     {
@@ -42,15 +42,15 @@ export function AppSidebar({
       items: [
         {
           title: "Turu",
-          url: "/admin/barangays/turu",
+          url: "/admin/barangays/Turu",
         },
         {
           title: "Balitucan",
-          url: "/admin/barangays/balitucan",
+          url: "/admin/barangays/Balitucan",
         },
         {
           title: "Mapinya",
-          url: "/admin/barangays/mapinya",
+          url: "/admin/barangays/Mapinya",
         },
       ],
     },
@@ -67,10 +67,10 @@ export function AppSidebar({
           title: "Yield Analysis",
           url: "/admin/analytics/yield",
         },
-        {
-          title: "Weather Impact",
-          url: "/admin/analytics/weather",
-        },
+        // {
+        //   title: "Weather Impact",
+        //   url: "/admin/analytics/weather",
+        // },
       ],
     },
     {

@@ -9,12 +9,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <ConvexClientProvider>
             <div className="flex flex-col h-screen">
                 <SidebarProvider>
-                    <AppSidebar 
+                    <AppSidebar
                         header="Admin Portal"
                         value="admin"
                     />
-                <div className="flex-1 overflow-y-auto p-4">
-                    {children}
+                    <div className="flex-1 overflow-y-auto">
+                        <div className="container mx-auto py-4 px-4 max-w-7xl pt-8">
+                            {children}
+                        </div>
                     </div>
                     <Toaster />
                 </SidebarProvider>
