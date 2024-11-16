@@ -16,7 +16,8 @@ import {
   LayoutDashboard,
   LineChart,
   Map,
-  MessageSquare
+  MessageSquare,
+  Users
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,6 +35,17 @@ export function AppSidebar({
       title: "Dashboard",
       url: "/admin",
       icon: LayoutDashboard,
+    },
+    {
+      title: "User Management",
+      url: "/admin/user-management",
+      icon: Users,
+      items: [
+        {
+          title: "Users",
+          url: "/admin/user-management",
+        },
+      ],
     },
     {
       title: "Barangay Management",

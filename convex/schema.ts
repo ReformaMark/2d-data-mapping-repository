@@ -19,12 +19,12 @@ const schema = defineSchema({
             contactNumber: v.string(),
             address: v.string(),
             isActive: v.boolean(),
-            lastLogin: v.optional(v.string()),
         })),
         stakeholderProfile: v.optional(v.object({
             organization: v.string(),
             position: v.string(),
             contactNumber: v.string(),
+            isActive: v.boolean(),
         })),
     })
         .index("by_email", ["email"])
@@ -96,6 +96,15 @@ const schema = defineSchema({
         data: v.string(), // JSON stringified analytics data
         lastUpdated: v.string(), // ISO date string
     }).index("by_type_period", ["type", "period"]),
+
+    auditLogs: defineTable({
+        userId: v.id("users"), // Admin who performed the action
+        action: v.string(), // Description of the action
+        targetId: v.id("users"), // User affected by the action
+        targetType: v.string(), // "farmer" or "stakeholder"
+        details: v.string(), // Additional context
+        timestamp: v.number(), // Unix timestamp
+    }).index("by_timestamp", ["timestamp"]),
 });
 
 export default schema;
