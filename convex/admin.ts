@@ -468,6 +468,10 @@ export const createAdmin = mutation({
 
             if (!accountResponse?.user?._id) throw new ConvexError("Failed to create account")
 
+            await ctx.db.patch(accountResponse.user._id, {
+                isActive: true
+            });
+
             await ctx.db.insert("auditLogs", {
                 userId: adminId,
                 action: "Created Admin Account",
@@ -484,3 +488,76 @@ export const createAdmin = mutation({
         }
     }
 })
+
+export const toggleAdminStatus = mutation({
+    args: {
+        adminId: v.id("users"),
+        currentAdminId: v.id("users")
+    },
+    handler: async (ctx, args) => {
+        const admin = await ctx.db.get(args.adminId);
+        if (!admin) throw new ConvexError("Admin not found");
+
+        // Prevent self-deactivation
+        if (args.adminId === args.currentAdminId) {
+            throw new ConvexError("Cannot deactivate your own account");
+        }
+
+        await ctx.db.patch(args.adminId, {
+            isActive: !admin.isActive
+        });
+
+        // Create audit log
+        await ctx.db.insert("auditLogs", {
+            userId: args.currentAdminId,
+            action: admin.isActive ? "Deactivated Admin Account" : "Activated Admin Account",
+            targetId: args.adminId,
+            targetType: "admin",
+            details: `${admin.isActive ? "Deactivated" : "Activated"} admin account for ${admin.fname} ${admin.lname}`,
+            timestamp: Date.now(),
+        });
+    }
+});
+
+export const deleteAdmin = mutation({
+    args: {
+        adminId: v.id("users"),
+        currentAdminId: v.id("users")
+    },
+    handler: async (ctx, args) => {
+        const admin = await ctx.db.get(args.adminId);
+        if (!admin) throw new ConvexError("Admin not found");
+
+        // Prevent self-deletion
+        if (args.adminId === args.currentAdminId) {
+            throw new ConvexError("Cannot delete your own account");
+        }
+
+        // Create audit log before deletion
+        await ctx.db.insert("auditLogs", {
+            userId: args.currentAdminId,
+            action: "Deleted Admin Account",
+            targetId: args.adminId,
+            targetType: "admin",
+            details: `Deleted admin account for ${admin.fname} ${admin.lname}`,
+            timestamp: Date.now(),
+        });
+
+        await ctx.db.delete(args.adminId);
+    }
+});
+
+export const resetAdminPassword = mutation({
+    args: {
+        adminId: v.id("users"),
+        currentAdminId: v.id("users")
+    },
+    handler: async (ctx, args) => {
+        // Implementation depends on your password reset flow
+        // You might want to:
+        // 1. Generate a temporary password
+        // 2. Send an email with reset link
+        // 3. Force password change on next login
+    }
+});
+

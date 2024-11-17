@@ -14,6 +14,7 @@ const schema = defineSchema({
             v.literal("stakeholder"),
             v.literal("farmer")
         ),
+        isActive: v.optional(v.boolean()),
         farmerProfile: v.optional(v.object({
             barangayId: v.id("barangays"), // Reference to barangays table
             contactNumber: v.string(),
