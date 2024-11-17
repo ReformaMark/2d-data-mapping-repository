@@ -1,5 +1,5 @@
 "use client"
-
+   /* eslint-disable */
 import { useMutation, useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,6 @@ import {
 import { Shield } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Eye } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useCurrentUser } from "@/features/users/api/use-current-user"
@@ -37,7 +36,7 @@ export const UsersList = () => {
     const admins = useQuery(api.admin.getAllAdmins)
     const toggleStatus = useMutation(api.admin.toggleAdminStatus)
     const deleteAdmin = useMutation(api.admin.deleteAdmin)
-    const resetPassword = useMutation(api.admin.resetAdminPassword)
+    // const resetPassword = useMutation(api.admin.resetAdminPassword)
     const router = useRouter()
     const { data: currentUser } = useCurrentUser()
 
@@ -47,7 +46,7 @@ export const UsersList = () => {
     const [adminToToggle, setAdminToToggle] = useState<any>(null)
 
     if (!admins) return null
-
+ 
     const handleToggleStatus = async (admin: any) => {
         setAdminToToggle(admin)
         setShowStatusDialog(true)

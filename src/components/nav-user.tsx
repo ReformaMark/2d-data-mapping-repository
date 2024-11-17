@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { useRouter } from "next/navigation"
-import { Doc } from "../../convex/_generated/dataModel"
 
 export function NavUser() {
   const { signOut } = useAuthActions()

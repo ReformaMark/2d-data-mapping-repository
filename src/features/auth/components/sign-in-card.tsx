@@ -14,7 +14,6 @@ import { Loader2, TriangleAlertIcon } from "lucide-react"
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useRole } from "../api/use-role"
 import { AuthFlow } from "../types"
 // import { useCheckRole } from "../api/use-check-role"
 

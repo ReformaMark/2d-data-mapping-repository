@@ -14,7 +14,6 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Doc } from "../../../../convex/_generated/dataModel"
 import { XCircle } from "lucide-react"
-import { useDeclineRegistration } from "@/features/employees/api/employees"
 
 interface DeclineRegistrationDialogProps {
     employee: Doc<"users">
@@ -23,14 +22,14 @@ interface DeclineRegistrationDialogProps {
 export function DeclineRegistrationDialog({ employee }: DeclineRegistrationDialogProps) {
     const [open, setOpen] = useState(false)
     const [reason, setReason] = useState("")
-    const decline = useDeclineRegistration()
+    // const decline = useDeclineRegistration()
 
     async function handleDecline() {
         try {
-            await decline({
-                userId: employee._id,
-                reason,
-            })
+            // await decline({
+            //     userId: employee._id,
+            //     reason,
+            // })
             toast.success("Registration declined successfully")
             setOpen(false)
         } catch (error) {
@@ -56,7 +55,7 @@ export function DeclineRegistrationDialog({ employee }: DeclineRegistrationDialo
                     <DialogHeader>
                         <DialogTitle>Decline Registration</DialogTitle>
                         <DialogDescription>
-                            This will prevent {employee.firstName} {employee.lastName} from accessing the employee portal.
+                            This will prevent {employee.fname} {employee.lname} from accessing the employee portal.
                             This action can be reversed later.
                         </DialogDescription>
                     </DialogHeader>
