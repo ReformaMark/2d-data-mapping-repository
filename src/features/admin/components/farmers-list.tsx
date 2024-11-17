@@ -163,7 +163,7 @@ export function FarmersList() {
                                 <TableHead>Farmer</TableHead>
                                 <TableHead>Barangay</TableHead>
                                 <TableHead>Contact</TableHead>
-                                <TableHead>Total Area</TableHead>
+                                {/* <TableHead>Total Area</TableHead> */}
                                 <TableHead>Status</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
@@ -198,10 +198,10 @@ export function FarmersList() {
                                         </TableCell>
                                         <TableCell>{farmer.farmerProfile?.barangayName}</TableCell>
                                         <TableCell>{farmer.farmerProfile?.contactNumber || "—"}</TableCell>
-                                        <TableCell>{farmer.totalArea?.toFixed(2)} ha</TableCell>
+                                        {/* <TableCell>{farmer.totalArea?.toFixed(2)} ha</TableCell> */}
                                         <TableCell>
                                             <Badge
-                                                variant={farmer.farmerProfile?.isActive ? "default" : "secondary"}
+                                                variant={farmer.farmerProfile?.isActive ? "default" : "destructive"}
                                                 className="capitalize"
                                             >
                                                 {farmer.farmerProfile?.isActive ? "Active" : "Inactive"}
@@ -219,7 +219,7 @@ export function FarmersList() {
                                                     <DropdownMenuItem
                                                         onClick={() => router.push(`/admin/farmers/${farmer._id}`)}
                                                     >
-                                                        <Eye className="h-4 w-4 mr-2" />
+                                                        {/* <Eye className="h-4 w-4 mr-2" /> */}
                                                         View Details
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />

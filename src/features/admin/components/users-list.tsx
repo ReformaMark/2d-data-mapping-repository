@@ -16,9 +16,11 @@ import { Shield } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Eye } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export const UsersList = () => {
     const admins = useQuery(api.admin.getAllAdmins)
+    const router = useRouter()
 
     if (!admins) return null
 
@@ -31,7 +33,7 @@ export const UsersList = () => {
                         Manage system administrators
                     </p>
                 </div>
-                <Button>
+                <Button onClick={() => router.push("/admin/sysadmin/register")}>
                     <PlusIcon className="w-4 h-4 mr-2" />
                     Add Administrator
                 </Button>
@@ -42,8 +44,8 @@ export const UsersList = () => {
                     <TableRow>
                         <TableHead>Administrator</TableHead>
                         <TableHead>Role</TableHead>
-                        <TableHead>Last Active</TableHead>
-                        <TableHead>Status</TableHead>
+                        {/* <TableHead>Last Active</TableHead> */}
+                        {/* <TableHead>Status</TableHead> */}
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>

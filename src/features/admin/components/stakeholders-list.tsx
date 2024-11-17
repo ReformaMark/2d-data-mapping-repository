@@ -13,11 +13,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-    Eye, 
-    UserPlus, 
+import {
+    Eye,
+    UserPlus,
     Search,
-    MoreVertical 
+    MoreVertical
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
@@ -38,7 +38,7 @@ export function StakeholdersList() {
 
     if (!stakeholders) return null
 
-    const filteredStakeholders = stakeholders.filter(stakeholder => 
+    const filteredStakeholders = stakeholders.filter(stakeholder =>
         searchQuery === "" ||
         stakeholder.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
         stakeholder.lname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -54,10 +54,10 @@ export function StakeholdersList() {
                         Manage stakeholder accounts
                     </p>
                 </div>
-                <Button onClick={() => router.push("/admin/stakeholders/register")}>
+                {/* <Button onClick={() => router.push("/admin/stakeholders/register")}>
                     <UserPlus className="h-4 w-4 mr-2" />
                     Register New Stakeholder
-                </Button>
+                </Button> */}
             </div>
 
             <div className="flex items-center gap-4">
@@ -129,7 +129,7 @@ export function StakeholdersList() {
                                                 <DropdownMenuItem
                                                     onClick={() => router.push(`/admin/stakeholders/${stakeholder._id}`)}
                                                 >
-                                                    <Eye className="h-4 w-4 mr-2" />
+                                                    {/* <Eye className="h-4 w-4 mr-2" /> */}
                                                     View Details
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
