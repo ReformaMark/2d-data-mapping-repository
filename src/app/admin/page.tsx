@@ -1,11 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AuditLogOverview } from "@/features/admin/components/audit-log-overview"
 import { BarChart3, FileText, MapPin, Users2 } from "lucide-react"
 
 const statsCards = [
   {
     title: "Total Farmers",
     icon: Users2,
-    value: "Loading...", 
+    value: "Loading...",
     description: "Active farmers in the system",
     color: "text-blue-500"
   },
@@ -17,7 +18,7 @@ const statsCards = [
     color: "text-green-500"
   },
   {
-    title: "Production Records", 
+    title: "Production Records",
     icon: BarChart3,
     value: "Loading...",
     description: "Total production entries",
@@ -45,7 +46,7 @@ const AdminPage = () => {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {statsCards.map((card) => (
-            <Card 
+            <Card
               key={card.title}
               className="transition-all hover:shadow-lg hover:-translate-y-1"
             >
@@ -63,6 +64,11 @@ const AdminPage = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <AuditLogOverview />
+
         </div>
       </div>
     </Card>
