@@ -24,9 +24,9 @@ export function AuditLogsTable() {
         to: Date | undefined
     }>({
         from: new Date(new Date().setDate(new Date().getDate() - 30)), // Last 30 days
-        to: new Date()
+        to: new Date(),
     })
-    
+
     const logs = useQuery(api.admin.getAuditLogs, {
         startDate: dateRange.from.getTime(),
         endDate: dateRange.to?.getTime() ?? new Date().getTime(),
