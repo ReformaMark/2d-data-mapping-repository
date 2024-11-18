@@ -206,9 +206,9 @@ export function AppSidebar({
       <SidebarHeader>
         <Link href={baseUrl} className="flex flex-col items-center mb-8">
           <div className="bg-[#8BC34A] w-full py-4 rounded-md flex flex-col items-center">
-            {value !== 'admin' && (
+            {/* {value !== 'admin' && (
               <Image src="/logo.svg" alt="A1 Agro" width={50} height={50} className="size-16" />
-            )}
+            )} */}
             <h1 className="text-sm font-semibold text-center text-white mt-2 px-2">
               {header}
             </h1>
