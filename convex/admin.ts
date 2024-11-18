@@ -335,7 +335,7 @@ export const toggleUserStatus = mutation({
 
         await ctx.db.insert("auditLogs", {
             userId: args.adminId,
-            action: updatedProfile.isActive ? "ACTIVATE_ACCOUNT" : "DEACTIVATE_ACCOUNT",
+            action: profile.isActive ? "Account Deactivated" : "Account Activated",
             targetId: args.userId,
             targetType: args.userType,
             details: `${args.userType} account ${updatedProfile.isActive ? "activated" : "deactivated"}: ${user.fname} ${user.lname}`,
@@ -547,17 +547,35 @@ export const deleteAdmin = mutation({
     }
 });
 
-export const resetAdminPassword = mutation({
+export const getRecentAuditLogs = query({
+    args: {},
+    handler: async (ctx) => {
+        const logs = await ctx.db
+            .query("auditLogs")
+            .order("desc")
+            .take(5)
+
+        return logs
+    },
+})
+
+export const getAuditLogs = query({
     args: {
-        adminId: v.id("users"),
-        currentAdminId: v.id("users")
+        startDate: v.optional(v.number()),
+        endDate: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
-        // Implementation depends on your password reset flow
-        // You might want to:
-        // 1. Generate a temporary password
-        // 2. Send an email with reset link
-        // 3. Force password change on next login
-    }
-});
+        let q = ctx.db.query("auditLogs").order("desc");
 
+        if (args.startDate && args.endDate) {
+            q = q.filter((q) =>
+                q.and(
+                    q.gte(q.field("timestamp"), args.startDate!),
+                    q.lte(q.field("timestamp"), args.endDate!)
+                )
+            );
+        }
+
+        return await q.collect();
+    },
+});

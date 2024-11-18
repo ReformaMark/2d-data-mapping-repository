@@ -20,14 +20,35 @@ export const AuthScreen = () => {
         <div className="h-screen w-full lg:flex lg:flex-row">
             <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-primary to-primary/80">
                 <div className="h-full flex flex-col justify-center items-center px-24 space-y-8">
-                    <div className="relative w-full max-w-[420px] h-[120px]">
-                        <Image
-                            src="/logo.svg"
-                            alt="Logo"
-                            fill
-                            className="object-contain"
-                            priority
-                        />
+                    <div className="bg-white rounded-lg p-8 shadow-lg w-fit">
+                        <div className="flex flex-row items-center justify-center gap-4">
+                            <div className="flex flex-col items-center">
+                                <div className="w-[300px] h-[60px] relative">
+                                    <Image
+                                        src="/turu-logo.png"
+                                        alt="Turu Logo"
+                                        fill
+                                        className="object-contain hover:scale-105 transition-transform"
+                                        priority
+                                        sizes="(max-width: 300px) 100vw, 300px"
+                                    />
+                                </div>
+                                <span className="text-sm text-gray-600 mt-2">Barangay Turu</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div className="w-[260px] h-[60px] relative">
+                                    <Image
+                                        src="/mapinya-logo.png"
+                                        alt="Mapinya Logo"
+                                        fill
+                                        className="object-contain hover:scale-105 transition-transform"
+                                        priority
+                                        sizes="(max-width: 260px) 100vw, 260px"
+                                    />
+                                </div>
+                                <span className="text-sm text-gray-600 mt-2">Barangay Mapinya & Balitucan</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="text-center space-y-3">
                         <h1 className="text-5xl font-bold text-white">Welcome</h1>
