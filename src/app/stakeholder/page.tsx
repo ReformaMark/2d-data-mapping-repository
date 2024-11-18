@@ -1,64 +1,78 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Eye, MessageSquare } from "lucide-react"
-import { Suspense } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import Turu from '@/../public/images/brgy-turu-logo.jpg'
+import Balitucan from '@/../public/images/brgy-balitucan-mapinya-logo.jpg'
+import MaPinya from '@/../public/images/brgy-balitucan-mapinya-logo.jpg'
 
-const StakeholdersPage = () => {
+function Dashboard() {
   return (
-    <div className="space-y-6 p-6 max-w-7xl mx-auto">
-      <div className="border-b pb-4">
-        <h1 className="text-3xl font-bold tracking-tight">Stakeholder Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          View and manage your stakeholder account
-        </p>
-      </div>
-
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <Link href="/stakeholder/production-analysis?search=Turu">
+        <Card className="group hover:shadow-lg transition-shadow duration-200">
           <CardHeader>
-            <CardTitle>Profile</CardTitle>
-            <CardDescription>Your stakeholder profile information</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Suspense fallback={<div>Loading profile...</div>}>
-              {/* Profile component will go here */}
-            </Suspense>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest interactions and updates</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Suspense fallback={<div>Loading activity...</div>}>
-              {/* Activity component will go here */}
-            </Suspense>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and operations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Button className="w-full justify-start" variant="outline">
-                <Eye className="mr-2 h-4 w-4" />
-                View Reports
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Contact Support
-              </Button>
+            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+              <Image
+                src={Turu}
+                alt="Barangay Turu"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-full"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
             </div>
+            <CardTitle>Barangay Turu</CardTitle>
+            <CardDescription>Magalang, Pampanga</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">Barangay Turu crop production focused on Corns and Rice.</p>
           </CardContent>
         </Card>
-      </div>
+      </Link>
+
+      <Link href="/stakeholder/production-analysis?search=Balitucan">
+        <Card className="group hover:shadow-lg transition-shadow duration-200">
+          <CardHeader>
+            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+              <Image
+                src={Balitucan}
+                alt="Barangay Balitucan"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-full"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
+            <CardTitle>Barangay Balitucan</CardTitle>
+            <CardDescription>Magalang, Pampanga</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">Barangay Balitucan focuses on Corns and Rice as well as few other crops such as tomatoes and carrots.</p>
+          </CardContent>
+        </Card>
+      </Link>
+
+      <Link href="/stakeholder/production-analysis?search=Ma Pinya">
+        <Card className="group hover:shadow-lg transition-shadow duration-200">
+          <CardHeader>
+            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+              <Image
+                src={MaPinya}
+                alt="Barangay Ma Pinya"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-full"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
+            <CardTitle>Barangay Ma Pinya</CardTitle>
+            <CardDescription>Magalang, Pampanga</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">Focused on Corns and Rice along with Eggplant and tomatoes.</p>
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   )
 }
 
-export default StakeholdersPage
+export default Dashboard

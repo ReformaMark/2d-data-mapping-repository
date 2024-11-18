@@ -34,15 +34,22 @@ const schema = defineSchema({
 
     // Barangays table
     barangays: defineTable({
-        name: v.union(
-            v.literal("Turu"),
-            v.literal("Balitucan"),
-            v.literal("Mapinya")
-        ),
-        address: v.string(),
-        coordinates: v.array(v.number()), // [latitude, longitude]
-        boundaries: v.array(v.array(v.number())), // GeoJSON polygon coordinates
-        area: v.number(), // in hectares
+        name: v.string(),
+        coordinates: v.array(v.array(v.number())), // GeoJSON polygon coordinates
+        resources: v.array(v.object({
+            name: v.string(),
+            description: v.string(),
+            coordinates: v.array(v.number()), // [latitude, longitude]
+            icon: v.string(),
+            production: v.number()
+        })),
+        production: v.optional(v.object({
+            rice: v.number(),
+            corn: v.number(),
+            carrots: v.number(),
+            tomatoes: v.number(),
+            eggplant: v.number()
+        }))
     }).index("by_name", ["name"]),
 
     // Map Markers table

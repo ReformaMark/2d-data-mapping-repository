@@ -148,7 +148,7 @@ export function AppSidebar({
       items: [
         {
           title: "Production Analysis",
-          url: "/stakeholder/data/production",
+          url: "/stakeholder/production-analysis",
         },
         {
           title: "Market Trends",

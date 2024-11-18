@@ -11,3 +11,10 @@ export const list = query({
         })
     }
 })
+
+export const get = query({
+    handler: async (ctx) => {
+        const barangays = await ctx.db.query("barangays").collect();
+        return barangays;
+    }
+})
