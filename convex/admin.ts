@@ -26,6 +26,50 @@ export const getDashboardStats = query({
     }
 })
 
+export const getDashboardOverview = query({
+    args: {},
+    handler: async (ctx) => {
+        // Get all users by role
+        const [farmers, stakeholders, admins] = await Promise.all([
+            ctx.db.query("users")
+                .filter((q) => q.eq(q.field("role"), "farmer"))
+                .collect(),
+            ctx.db.query("users")
+                .filter((q) => q.eq(q.field("role"), "stakeholder"))
+                .collect(),
+            ctx.db.query("users")
+                .filter((q) => q.eq(q.field("role"), "admin"))
+                .collect()
+        ]);
+
+        // Get active plots
+        const plots = await ctx.db
+            .query("agriculturalPlots")
+            .filter((q) => q.eq(q.field("status"), "active"))
+            .collect();
+
+        // Get total area of all plots
+        const totalArea = plots.reduce((sum, plot) => sum + plot.area, 0);
+
+        // Get recent audit logs count
+        const recentAuditLogs = await ctx.db
+            .query("auditLogs")
+            .order("desc")
+            .take(100)
+
+        return {
+            totalFarmers: farmers.length,
+            activeFarmers: farmers.filter(f => f.farmerProfile?.isActive).length,
+            totalStakeholders: stakeholders.length,
+            activeStakeholders: stakeholders.filter(s => s.stakeholderProfile?.isActive).length,
+            totalAdmins: admins.length,
+            activePlots: plots.length,
+            totalAreaHectares: Math.round(totalArea * 100) / 100,
+            recentActivityCount: recentAuditLogs.length
+        }
+    }
+})
+
 export const getBarangayDetails = query({
     args: {
         name: v.union(
@@ -553,7 +597,7 @@ export const getRecentAuditLogs = query({
         const logs = await ctx.db
             .query("auditLogs")
             .order("desc")
-            .take(5)
+            .take(20)
 
         return logs
     },

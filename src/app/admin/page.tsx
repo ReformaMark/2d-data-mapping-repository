@@ -1,39 +1,45 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AuditLogOverview } from "@/features/admin/components/audit-log-overview"
-import { BarChart3, FileText, MapPin, Users2 } from "lucide-react"
+import { useQuery } from "convex/react"
+import { Activity, BarChart3, FileText, MapPin, UserCog, Users2 } from "lucide-react"
+import { api } from "../../../convex/_generated/api"
 
-const statsCards = [
-  {
-    title: "Total Farmers",
-    icon: Users2,
-    value: "Loading...",
-    description: "Active farmers in the system",
-    color: "text-blue-500"
-  },
-  {
-    title: "Total Agricultural Plots",
-    icon: MapPin,
-    value: "Loading...",
-    description: "Registered farming areas",
-    color: "text-green-500"
-  },
-  {
-    title: "Production Records",
-    icon: BarChart3,
-    value: "Loading...",
-    description: "Total production entries",
-    color: "text-orange-500"
-  },
-  {
-    title: "Reports Generated",
-    icon: FileText,
-    value: "Loading...",
-    description: "System generated reports",
-    color: "text-purple-500"
-  }
-]
+
 
 const AdminPage = () => {
+  const stats = useQuery(api.admin.getDashboardOverview)
+
+  const statsCards = [
+    {
+      title: "Farmers",
+      icon: Users2,
+      value: stats ? `${stats.activeFarmers}/${stats.totalFarmers}` : "Loading...",
+      description: "Active/Total farmers",
+      color: "text-blue-500"
+    },
+    {
+      title: "Stakeholders",
+      icon: UserCog,
+      value: stats ? `${stats.activeStakeholders}/${stats.totalStakeholders}` : "Loading...",
+      description: "Active/Total stakeholders",
+      color: "text-purple-500"
+    },
+    {
+      title: "Agricultural Plots",
+      icon: MapPin,
+      value: stats ? `${stats.activePlots} (${stats.totalAreaHectares}ha)` : "Loading...",
+      description: "Active plots and total area",
+      color: "text-green-500"
+    },
+    {
+      title: "Recent Activity",
+      icon: Activity,
+      value: stats?.recentActivityCount ?? "Loading...",
+      description: "Recent system activities",
+      color: "text-orange-500"
+    }
+  ]
   return (
     <Card className="p-6">
       <div className="space-y-8">
