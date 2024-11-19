@@ -161,7 +161,7 @@ export const CreateFarmerForm = () => {
                         <FormItem>
                             <FormLabel>Contact Number</FormLabel>
                             <FormControl>
-                                <Input placeholder="09123456789" {...field} />
+                                <Input placeholder="09123456789" {...field} maxLength={11} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

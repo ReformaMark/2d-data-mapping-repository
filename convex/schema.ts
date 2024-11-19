@@ -22,8 +22,8 @@ const schema = defineSchema({
             isActive: v.boolean(),
         })),
         stakeholderProfile: v.optional(v.object({
-            organization: v.string(),
-            position: v.string(),
+            // organization: v.string(),
+            // position: v.string(),
             contactNumber: v.string(),
             isActive: v.boolean(),
         })),

@@ -29,6 +29,7 @@ export const SignUpCard = ({
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
     const [pending, setPending] = useState<boolean>(false);
     const [error, setError] = useState("");
 
@@ -71,6 +72,11 @@ export const SignUpCard = ({
                 lastName,
                 password,
                 isArchived: false,
+                role: "stakeholder",
+                stakeholderProfile: {
+                    contactNumber,
+                    isActive: true,
+                },
                 flow: "signUp",
             })
         } catch (err) {
@@ -173,8 +179,21 @@ export const SignUpCard = ({
                         />
                     </div>
 
-                    <Button type="submit" className="w-full">
-                        Sign up
+                    <div className="space-y-2">
+                        <Label htmlFor="contactNumber">Contact Number</Label>
+                        <Input
+                            id="contactNumber"
+                            disabled={pending}
+                            value={contactNumber}
+                            onChange={(e) => setContactNumber(e.target.value)}
+                            placeholder="Enter your contact number"
+                            required
+                            maxLength={11}
+                        />
+                    </div>
+
+                    <Button type="submit" className="w-full" disabled={pending}>
+                        {pending ? "Signing up..." : "Sign up"}
                     </Button>
                 </form>
 

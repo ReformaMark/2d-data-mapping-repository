@@ -9,7 +9,11 @@ const CustomPassword = Password<DataModel>({
       fname: params.firstName as string,
       lname: params.lastName as string,
       email: params.email as string,
-      role: "stakeholder",
+      role: params.role as "stakeholder" | "farmer",
+      stakeholderProfile: params.stakeholderProfile as {
+        contactNumber: string,
+        isActive: boolean,
+      },
     }
   }
 })
