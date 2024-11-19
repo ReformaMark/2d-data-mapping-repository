@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useQuery } from "convex/react"
 import { MapPin, Users, Wheat, BarChart } from "lucide-react"
 import { api } from "../../../../convex/_generated/api"
+import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip } from 'recharts'
 
 interface BarangayOverviewProps {
     barangayName: "Turu" | "Balitucan" | "Mapinya"
@@ -47,14 +48,22 @@ export function BarangayOverview({ barangayName }: BarangayOverviewProps) {
         }
     ]
 
+    // Transform production data for pie chart
+    const productionData = barangayData.barangay?.production ? [
+        { name: 'Rice', value: barangayData.barangay.production.rice },
+        { name: 'Corn', value: barangayData.barangay.production.corn },
+        { name: 'Carrots', value: barangayData.barangay.production.carrots },
+        { name: 'Tomatoes', value: barangayData.barangay.production.tomatoes },
+        { name: 'Eggplant', value: barangayData.barangay.production.eggplant }
+    ] : []
+
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
+
     return (
-        <div className="p-4 md:p-6">
+        <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat) => (
-                    <Card
-                        key={stat.title}
-                        className="transition-all hover:shadow-lg hover:-translate-y-1"
-                    >
+                    <Card key={stat.title}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">
                                 {stat.title}
@@ -70,6 +79,35 @@ export function BarangayOverview({ barangayName }: BarangayOverviewProps) {
                     </Card>
                 ))}
             </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Crop Production Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[300px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={productionData}
+                                    cx="50%"
+                                    cy="50%"
+                                    labelLine={false}
+                                    outerRadius={100}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                >
+                                    {productionData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     )
 }

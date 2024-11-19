@@ -32,10 +32,10 @@ export function BarangayFarmers({ barangayName }: BarangayFarmersProps) {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">Registered Farmers</h3>
-                <Button>
+                {/* <Button>
                     <UserPlus className="h-4 w-4 mr-2" />
                     Add Farmer
-                </Button>
+                </Button> */}
             </div>
 
             <Table>
@@ -46,7 +46,7 @@ export function BarangayFarmers({ barangayName }: BarangayFarmersProps) {
                         <TableHead>Total Area</TableHead>
                         <TableHead>Active Plots</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        {/* <TableHead className="text-right">Actions</TableHead> */}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -74,7 +74,7 @@ export function BarangayFarmers({ barangayName }: BarangayFarmersProps) {
                                     {farmer.farmerProfile?.isActive ? "Active" : "Inactive"}
                                 </Badge>
                             </TableCell>
-                            <TableCell className="text-right">
+                            {/* <TableCell className="text-right">
                                 <Button
                                     variant="ghost"
                                     size="icon"
@@ -82,7 +82,7 @@ export function BarangayFarmers({ barangayName }: BarangayFarmersProps) {
                                 >
                                     <Eye className="h-4 w-4" />
                                 </Button>
-                            </TableCell>
+                            </TableCell> */}
                         </TableRow>
                     ))}
                 </TableBody>

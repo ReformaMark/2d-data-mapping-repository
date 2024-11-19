@@ -71,58 +71,57 @@ export const getDashboardOverview = query({
 })
 
 export const getBarangayDetails = query({
-    args: {
-        name: v.union(
-            v.literal("Turu"),
-            v.literal("Balitucan"),
-            v.literal("Mapinya")
-        )
-    },
+    args: { name: v.string() },
     handler: async (ctx, args) => {
+        // Get barangay data
         const barangay = await ctx.db
             .query("barangays")
             .filter((q) => q.eq(q.field("name"), args.name))
-            .first()
+            .first();
 
-        if (!barangay) return null
+        if (!barangay) throw new Error("Barangay not found");
 
+        // Get farmers count
         const farmers = await ctx.db
             .query("users")
-            .filter((q) =>
-                q.eq(q.field("role"), "farmer") &&
-                q.eq(q.field("farmerProfile.barangayId"), barangay._id)
+            .filter((q) => 
+                q.and(
+                    q.eq(q.field("role"), "farmer"),
+                    q.eq(q.field("farmerProfile.barangayId"), barangay._id)
+                )
             )
-            .collect()
+            .collect();
 
+        // Get plots data
         const plots = await ctx.db
             .query("agriculturalPlots")
             .filter((q) => q.eq(q.field("barangayId"), barangay._id))
-            .collect()
+            .collect();
 
-        const currentYear = new Date().getFullYear().toString()
-        const currentQuarter = `Q${Math.floor((new Date().getMonth() + 3) / 3)}`
+        // Get production data for current quarter
+        const currentYear = new Date().getFullYear().toString();
+        const currentQuarter = `Q${Math.floor((new Date().getMonth() + 3) / 3)}`;
 
         const productionData = await ctx.db
             .query("productionData")
-            .filter((q) =>
+            .filter((q) => 
                 q.and(
                     q.eq(q.field("barangayId"), barangay._id),
                     q.eq(q.field("year"), currentYear),
                     q.eq(q.field("quarter"), currentQuarter)
                 )
             )
-            .collect()
+            .collect();
 
         return {
-            ...barangay,
-            farmerCount: farmers.length,
+            barangay,
             totalArea: plots.reduce((sum, plot) => sum + plot.area, 0),
+            farmerCount: farmers.length,
             activePlots: plots.filter(plot => plot.status === "active").length,
-            totalProduction: productionData.reduce((sum, data) => sum + data.totalProduction, 0)
-        }
+            totalProduction: productionData.reduce((sum, record) => sum + record.totalProduction, 0)
+        };
     }
-})
-
+});
 export const getAggregateStats = query({
     args: {},
     handler: async (ctx) => {

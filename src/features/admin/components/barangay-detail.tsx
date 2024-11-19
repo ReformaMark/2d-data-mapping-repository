@@ -16,7 +16,7 @@ export const BarangayDetail = ({ barangayName }: BarangayDetailProps) => {
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="plots">Plots</TabsTrigger>
                 <TabsTrigger value="farmers">Farmers</TabsTrigger>
-                <TabsTrigger value="production">Production</TabsTrigger>
+                {/* <TabsTrigger value="production">Production</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
@@ -31,9 +31,9 @@ export const BarangayDetail = ({ barangayName }: BarangayDetailProps) => {
                 <BarangayFarmers barangayName={barangayName} />
             </TabsContent>
 
-            <TabsContent value="production" className="space-y-4">
+            {/* <TabsContent value="production" className="space-y-4">
                 <BarangayProduction barangayName={barangayName} />
-            </TabsContent>
+            </TabsContent> */}
         </Tabs>
     )
 }
