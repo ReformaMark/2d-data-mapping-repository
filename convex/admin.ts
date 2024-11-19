@@ -678,3 +678,42 @@ export const updateFarmerProfile = mutation({
         return { success: true };
     }
 });
+
+export const updateStakeholderProfile = mutation({
+    args: {
+        stakeholderId: v.id("users"),
+        fname: v.string(),
+        lname: v.string(),
+        email: v.string(),
+        contactNumber: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const stakeholder = await ctx.db.get(args.stakeholderId);
+        if (!stakeholder) throw new ConvexError("Stakeholder not found");
+        if (stakeholder.role !== "stakeholder") throw new ConvexError("User is not a stakeholder");
+
+        // Update user document
+        await ctx.db.patch(args.stakeholderId, {
+            fname: args.fname,
+            lname: args.lname,
+            email: args.email,
+            stakeholderProfile: {
+                ...stakeholder.stakeholderProfile,
+                contactNumber: args.contactNumber,
+                isActive: stakeholder.stakeholderProfile?.isActive ?? true
+            }
+        });
+
+        // Create audit log
+        await ctx.db.insert("auditLogs", {
+            userId: args.stakeholderId,
+            action: "Updated Stakeholder Profile",
+            targetId: args.stakeholderId,
+            targetType: "stakeholder",
+            details: `Updated profile for stakeholder ${args.fname} ${args.lname}`,
+            timestamp: Date.now(),
+        });
+
+        return { success: true };
+    }
+});

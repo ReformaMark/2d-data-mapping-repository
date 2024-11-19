@@ -33,6 +33,8 @@ import { useCurrentUser } from "@/features/users/api/use-current-user"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/confirm-dialog"
 import { Id } from "../../../../convex/_generated/dataModel"
+import { StakeholderDetailsModal } from "@/features/users/api/components/stakeholder-details-modal"
+import { StakeholderEditModal } from "@/features/users/api/components/stakeholder-edit-modal"
 
 export function StakeholdersList() {
     const router = useRouter()
@@ -43,6 +45,8 @@ export function StakeholdersList() {
 
     const [showConfirmDialog, setShowConfirmDialog] = useState(false)
     const [selectedStakeholder, setSelectedStakeholder] = useState<NonNullable<typeof stakeholders>[number] | null>(null)
+    const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false)
 
     if (!stakeholders) return null
 
@@ -159,14 +163,19 @@ export function StakeholdersList() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem
-                                                        onClick={() => router.push(`/admin/stakeholders/${stakeholder._id}`)}
+                                                        onClick={() => {
+                                                            setSelectedStakeholder(stakeholder)
+                                                            setShowDetailsModal(true)
+                                                        }}
                                                     >
-                                                        {/* <Eye className="h-4 w-4 mr-2" /> */}
                                                         View Details
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
-                                                        onClick={() => router.push(`/admin/stakeholders/${stakeholder._id}/edit`)}
+                                                        onClick={() => {
+                                                            setSelectedStakeholder(stakeholder)
+                                                            setShowEditModal(true)
+                                                        }}
                                                     >
                                                         Edit Profile
                                                     </DropdownMenuItem>
@@ -189,6 +198,26 @@ export function StakeholdersList() {
                     </Table>
                 </div>
             </div>
+
+            <StakeholderDetailsModal
+                isOpen={showDetailsModal}
+                onClose={() => {
+                    setShowDetailsModal(false)
+                    setSelectedStakeholder(null)
+                }}
+                // @ts-expect-error slight typing issue
+                stakeholder={selectedStakeholder}
+            />
+
+            <StakeholderEditModal
+                isOpen={showEditModal}
+                onClose={() => {
+                    setShowEditModal(false)
+                    setSelectedStakeholder(null)
+                }}
+                // @ts-expect-error slight typing issue
+                stakeholder={selectedStakeholder}
+            />
             <ConfirmDialog
                 isOpen={showConfirmDialog}
                 onClose={() => {
