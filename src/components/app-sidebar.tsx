@@ -65,25 +65,25 @@ export function AppSidebar({
         },
       ],
     },
-    {
-      title: "Analytics",
-      url: "/admin/analytics",
-      icon: LineChart,
-      items: [
-        {
-          title: "Production Overview",
-          url: "/admin/analytics/production",
-        },
-        {
-          title: "Yield Analysis",
-          url: "/admin/analytics/yield",
-        },
-        // {
-        //   title: "Weather Impact",
-        //   url: "/admin/analytics/weather",
-        // },
-      ],
-    },
+    // {
+    //   title: "Analytics",
+    //   url: "/admin/analytics",
+    //   icon: LineChart,
+    //   items: [
+    //     {
+    //       title: "Production Overview",
+    //       url: "/admin/analytics/production",
+    //     },
+    //     {
+    //       title: "Yield Analysis",
+    //       url: "/admin/analytics/yield",
+    //     },
+    //     // {
+    //     //   title: "Weather Impact",
+    //     //   url: "/admin/analytics/weather",
+    //     // },
+    //   ],
+    // },
     {
       title: "Reports",
       url: "/admin/reports",
