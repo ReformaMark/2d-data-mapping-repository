@@ -1,6 +1,7 @@
 "use client"
 
-import { useQuery } from "convex/react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
     Table,
     TableBody,
@@ -9,11 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Eye, UserPlus } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 
 interface BarangayFarmersProps {
@@ -21,7 +18,6 @@ interface BarangayFarmersProps {
 }
 
 export function BarangayFarmers({ barangayName }: BarangayFarmersProps) {
-    const router = useRouter()
     const farmers = useQuery(api.admin.getBarangayFarmers, {
         name: barangayName
     })

@@ -1,15 +1,16 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 
 interface FarmerDetailsModalProps {
     isOpen: boolean
     onClose: () => void
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     farmer: any // Replace with proper type from your schema
 }
 

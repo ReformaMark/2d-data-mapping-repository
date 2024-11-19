@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AuditLogOverview } from "@/features/admin/components/audit-log-overview"
 import { useQuery } from "convex/react"
-import { Activity, BarChart3, FileText, MapPin, UserCog, Users2 } from "lucide-react"
+import { Activity, MapPin, UserCog, Users2 } from "lucide-react"
 import { api } from "../../../convex/_generated/api"
 
 

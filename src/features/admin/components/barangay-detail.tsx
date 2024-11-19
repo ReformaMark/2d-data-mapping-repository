@@ -1,9 +1,8 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BarangayFarmers } from "./barangay-farmers"
 import { BarangayOverview } from "./barangay-overview"
 import { BarangayPlots } from "./barangay-plots"
-import { BarangayFarmers } from "./barangay-farmers"
-import { BarangayProduction } from "./barangay-production"
 
 interface BarangayDetailProps {
     barangayName: "Turu" | "Balitucan" | "Mapinya"

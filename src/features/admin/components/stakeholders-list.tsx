@@ -1,7 +1,6 @@
 "use client"
 
-import { useMutation, useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { Button } from "@/components/ui/button"
 import {
     Table,
     TableBody,
@@ -10,15 +9,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+import { useMutation, useQuery } from "convex/react"
+import { api } from "../../../../convex/_generated/api"
 // import { Badge } from "@/components/ui/badge"
+import { ConfirmDialog } from "@/components/confirm-dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-    Search,
-    MoreVertical
-} from "lucide-react"
-import { useRouter } from "next/navigation"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,17 +23,19 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState } from "react"
-import { Badge } from "@/components/ui/badge"
-import { useCurrentUser } from "@/features/users/api/use-current-user"
-import { toast } from "sonner"
-import { ConfirmDialog } from "@/components/confirm-dialog"
-import { Id } from "../../../../convex/_generated/dataModel"
+import { Input } from "@/components/ui/input"
 import { StakeholderDetailsModal } from "@/features/users/api/components/stakeholder-details-modal"
 import { StakeholderEditModal } from "@/features/users/api/components/stakeholder-edit-modal"
+import { useCurrentUser } from "@/features/users/api/use-current-user"
+import {
+    MoreVertical,
+    Search
+} from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+import { Id } from "../../../../convex/_generated/dataModel"
 
 export function StakeholdersList() {
-    const router = useRouter()
     const [searchQuery, setSearchQuery] = useState("")
     const stakeholders = useQuery(api.admin.getAllStakeholders)
     const toggleStatus = useMutation(api.admin.toggleUserStatus)

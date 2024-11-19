@@ -1,10 +1,12 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { ConvexClientProvider } from "@/components/convex-client-provider";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
+"use client"
 
+import { AppSidebar } from "@/components/app-sidebar"
+import { ConvexClientProvider } from "@/components/convex-client-provider"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
+import { withAuthMiddleware } from "@/features/auth/components/auth-middleware"
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
         <ConvexClientProvider>
             <div className="flex flex-col h-screen">
@@ -24,3 +26,5 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </ConvexClientProvider>
     )
 }
+
+export default withAuthMiddleware(AdminLayout)
