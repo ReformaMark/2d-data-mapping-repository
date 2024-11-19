@@ -39,6 +39,8 @@ import { useState } from "react"
 import { useCurrentUser } from "@/features/users/api/use-current-user"
 import { toast } from "sonner"
 import { ConfirmDialog } from "@/components/confirm-dialog"
+import { FarmerDetailsModal } from "@/features/users/api/components/farmer-details-modal"
+import { FarmerEditModal } from "@/features/users/api/components/farmer-edit-modal"
 
 export function FarmersList() {
     const router = useRouter()
@@ -50,6 +52,8 @@ export function FarmersList() {
     const toggleStatus = useMutation(api.admin.toggleUserStatus)
     const farmers = useQuery(api.admin.getAllFarmers)
     const [selectedFarmer, setSelectedFarmer] = useState<NonNullable<typeof farmers>[number] | null>(null)
+    const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false)
 
 
     if (!farmers) return null
@@ -215,14 +219,19 @@ export function FarmersList() {
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                     <DropdownMenuItem
-                                                        onClick={() => router.push(`/admin/farmers/${farmer._id}`)}
+                                                        onClick={() => {
+                                                            setSelectedFarmer(farmer)
+                                                            setShowDetailsModal(true)
+                                                        }}
                                                     >
-                                                        {/* <Eye className="h-4 w-4 mr-2" /> */}
                                                         View Details
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem
-                                                        onClick={() => router.push(`/admin/farmers/${farmer._id}/edit`)}
+                                                        onClick={() => {
+                                                            setSelectedFarmer(farmer)
+                                                            setShowEditModal(true)
+                                                        }}
                                                     >
                                                         Edit Profile
                                                     </DropdownMenuItem>
@@ -245,6 +254,25 @@ export function FarmersList() {
                     </Table>
                 </div>
             </div>
+
+            <FarmerDetailsModal
+                isOpen={showDetailsModal}
+                onClose={() => {
+                    setShowDetailsModal(false)
+                    setSelectedFarmer(null)
+                }}
+                farmer={selectedFarmer}
+            />
+
+            <FarmerEditModal
+                isOpen={showEditModal}
+                onClose={() => {
+                    setShowEditModal(false)
+                    setSelectedFarmer(null)
+                }}
+                // @ts-expect-error slight typing issue
+                farmer={selectedFarmer}
+            />
 
             <ConfirmDialog
                 isOpen={showConfirmDialog}

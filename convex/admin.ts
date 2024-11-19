@@ -623,3 +623,58 @@ export const getAuditLogs = query({
         return await q.collect();
     },
 });
+
+export const updateFarmerProfile = mutation({
+    args: {
+        farmerId: v.id("users"),
+        fname: v.string(),
+        lname: v.string(),
+        email: v.string(),
+        contactNumber: v.string(),
+        address: v.string(),
+        barangayName: v.union(
+            v.literal("Turu"),
+            v.literal("Balitucan"),
+            v.literal("Mapinya")
+        )
+    },
+    handler: async (ctx, args) => {
+        const farmer = await ctx.db.get(args.farmerId);
+        if (!farmer) throw new ConvexError("Farmer not found");
+        if (farmer.role !== "farmer") throw new ConvexError("User is not a farmer");
+
+        // Get barangay ID
+        const barangay = await ctx.db
+            .query("barangays")
+            .filter((q) => q.eq(q.field("name"), args.barangayName))
+            .first();
+
+        if (!barangay) throw new ConvexError("Barangay not found");
+
+        // Update user document
+        await ctx.db.patch(args.farmerId, {
+            fname: args.fname,
+            lname: args.lname,
+            email: args.email,
+            farmerProfile: {
+                ...farmer.farmerProfile,
+                barangayId: barangay._id,
+                contactNumber: args.contactNumber,
+                address: args.address,
+                isActive: farmer.farmerProfile?.isActive ?? true
+            }
+        });
+
+        // Create audit log
+        await ctx.db.insert("auditLogs", {
+            userId: args.farmerId, // Using farmer's ID as the actor
+            action: "Updated Farmer Profile",
+            targetId: args.farmerId,
+            targetType: "farmer",
+            details: `Updated profile for farmer ${args.fname} ${args.lname}`,
+            timestamp: Date.now(),
+        });
+
+        return { success: true };
+    }
+});
