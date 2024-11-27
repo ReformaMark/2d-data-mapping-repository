@@ -37,7 +37,6 @@ export function FarmerMap() {
     const [isAddingMarker, setIsAddingMarker] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const saveLocation = useMutation(api.mapMarkers.createMapMarker);
     const mapMarkers = useQuery(api.mapMarkers.getMapMarkers);
 
     const center: [number, number] = [15.25, 120.71]; // Centered between Barangay Turu, Mapinya, and Balitucan
@@ -103,7 +102,6 @@ export function FarmerMap() {
             setMarkerType={setMarkerType}
             errorMessage={errorMessage}
             setErrorMessage={setErrorMessage}
-            saveLocation={saveLocation}
             setIsAddingMarker={setIsAddingMarker}
             handleCancel={handleCancel}
         />

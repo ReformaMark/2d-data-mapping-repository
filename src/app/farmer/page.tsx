@@ -1,6 +1,5 @@
 'use client'
 import React, { useMemo } from 'react'
-import { FarmerMap } from '@/features/farmer/components/map'
 import dynamic from 'next/dynamic'
 
 function FarmerPage() {

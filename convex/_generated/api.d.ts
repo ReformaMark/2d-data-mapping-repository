@@ -14,8 +14,10 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as admin from "../admin.js";
+import type * as agriculturalPlots from "../agriculturalPlots.js";
 import type * as auth from "../auth.js";
 import type * as barangays from "../barangays.js";
+import type * as crops from "../crops.js";
 import type * as http from "../http.js";
 import type * as mapMarkers from "../mapMarkers.js";
 import type * as seed from "../seed.js";
@@ -31,8 +33,10 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  agriculturalPlots: typeof agriculturalPlots;
   auth: typeof auth;
   barangays: typeof barangays;
+  crops: typeof crops;
   http: typeof http;
   mapMarkers: typeof mapMarkers;
   seed: typeof seed;
