@@ -51,7 +51,7 @@ function Dashboard() {
         </Card>
       </Link>
 
-      <Link href="/stakeholder/production-analysis?search=Ma Pinya">
+      <Link href="/stakeholder/production-analysis?search=Mapinya">
         <Card className="group hover:shadow-lg transition-shadow duration-200">
           <CardHeader>
             <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
@@ -63,7 +63,7 @@ function Dashboard() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <CardTitle>Barangay Ma Pinya</CardTitle>
+            <CardTitle>Barangay Mapinya</CardTitle>
             <CardDescription>Magalang, Pampanga</CardDescription>
           </CardHeader>
           <CardContent>

@@ -55,6 +55,7 @@ const schema = defineSchema({
     // Map Markers table
     mapMarkers: defineTable({
         userId: v.id("users"),
+        barangay: v.string(),
         coordinates: v.array(v.number()), // [latitude, longitude]
         title: v.string(),
         description: v.optional(v.string()),
@@ -70,9 +71,11 @@ const schema = defineSchema({
         status: v.string(), // "active" | "fallow" | "preparing"
         cropHistory: v.array(v.id("crops")),
         landUseType: v.string(), // "rice" | "corn" | "vegetables"
+        markerId: v.id("mapMarkers"),
     })
         .index("by_userId", ["userId"])
-        .index("by_barangayId", ["barangayId"]),
+        .index("by_barangayId", ["barangayId"])
+        .index("by_markerId", ["markerId"]),
 
     // Crops table
     crops: defineTable({

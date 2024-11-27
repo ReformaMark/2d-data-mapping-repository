@@ -27,7 +27,7 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   header?: string,
-  value?: "admin" | "barangay" | "stakeholder"
+  value?: "admin" | "barangay" | "stakeholder" | "farmer"
 }) {
   const adminNav = [
     {
@@ -187,10 +187,19 @@ export function AppSidebar({
     },
   ];
 
+  const farmerNav = [
+    {
+      title: "Dashboard",
+      url: "/farmer",
+      icon: LayoutDashboard,
+    },
+  ];
+
   const navigationMap = {
     admin: adminNav,
     barangay: barangayNav,
-    stakeholder: stakeholderNav
+    stakeholder: stakeholderNav,
+    farmer: farmerNav
   };
 
   const { data: user } = useCurrentUser();

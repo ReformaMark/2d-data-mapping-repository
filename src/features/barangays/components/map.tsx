@@ -132,7 +132,7 @@ function MyMap() {
                 positions={barangay.coordinates as [number, number][]}
               >
                 <Popup>
-                  <span>Barangay {barangay.name}<br/>San Fernando, Pampanga</span>
+                  <span>Barangay {barangay.name}<br/>Magalang, Pampanga</span>
                   <PieChart width={200} height={200}>
                     <Pie
                       data={pieData}
