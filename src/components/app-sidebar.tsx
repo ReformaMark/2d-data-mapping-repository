@@ -152,16 +152,12 @@ export function AppSidebar({
       icon: LineChart,
       items: [
         {
-          title: "Production Analysis",
+          title: "Farm Locator",
           url: "/stakeholder/production-analysis",
         },
         {
-          title: "Market Trends",
-          url: "/stakeholder/data/market",
-        },
-        {
-          title: "Development Metrics",
-          url: "/stakeholder/data/development",
+          title: "Farms",
+          url: "/stakeholder/farms",
         },
       ],
     },
@@ -192,6 +188,34 @@ export function AppSidebar({
       title: "Dashboard",
       url: "/farmer",
       icon: LayoutDashboard,
+    },
+    {
+      title: "Farm Management",
+      url: "/farmer/farm-management",
+      icon: LineChart,
+      items: [
+        {
+          title: "Crop Management",
+          url: "/farmer/crop-management",
+        },
+        {
+          title: "Soil Health",
+          url: "/farmer/soil-health",
+        },
+        {
+          title: "Irrigation Systems",
+          url: "/farmerirrigation-systems",
+        },
+       
+        {
+          title: "Financial Information",
+          url: "/farmer/financial-information",
+        },
+        {
+          title: "Farm Infrastructure",
+          url: "/farmer/farm-infrastructure",
+        },
+      ],
     },
   ];
 

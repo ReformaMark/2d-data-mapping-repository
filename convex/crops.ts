@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const addCrop = mutation({
     args: {
@@ -7,6 +7,7 @@ export const addCrop = mutation({
         name: v.string(),
         plantingDate: v.string(),
         harvestDate: v.optional(v.string()),
+        yields: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         const crop = await ctx.db.insert("crops", {
@@ -14,6 +15,7 @@ export const addCrop = mutation({
             name: args.name,
             plantingDate: args.plantingDate,
             harvestDate: args.harvestDate,
+            yields: args.yields,
         });
         const cropId = await ctx.db.get(crop);
         if (!cropId) throw new Error("Crop not found");
@@ -21,3 +23,23 @@ export const addCrop = mutation({
         return cropId._id;
     }
 })  
+
+export const getCrops = query({
+    handler: async (ctx) => {
+        const crops = await ctx.db.query("crops").collect();
+        return crops;
+    }
+})
+
+export const updateCrop = mutation({
+    args: {
+        cropId: v.id("crops"),
+        name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const crop = await ctx.db.patch(args.cropId, {
+            name: args.name,
+        });
+        return crop;
+    }
+})

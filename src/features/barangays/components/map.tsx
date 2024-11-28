@@ -1,11 +1,11 @@
+/* eslint-disable */
 "use client"
-  /* eslint-disable */
 import React, { useState } from 'react'
 import { LayersControl, MapContainer, Polygon, Popup, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle,} from "@/components/ui/card"
+import { Tooltip, PieChart, Pie, Cell, ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Bar } from "recharts"
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -18,7 +18,11 @@ import eggplant from '@/../public/images/eggplant.png';
 import { useQuery } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
 import { useSearchParams } from 'next/navigation'
-
+import { Badge } from '@/components/ui/badge'
+import { formatDateToMonthYear } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import Image from 'next/image'
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -27,18 +31,24 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow.src,
 });
 
-
 function MyMap() {
-    const searchParams = useSearchParams()
-    const search = searchParams.get('search')
-    const allBarangays = useQuery(api.barangays.get)
-  const [position] = useState({
-    lat: 15.25,  // Centered between the 3 barangays
-    lng: 120.71, // Centered between the 3 barangays
-    zoom: 12     // Zoomed out to show all 3 barangays
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search')
+  const crops = useQuery(api.crops.getCrops);
+  const agriculturalPlot = useQuery(api.agriculturalPlots.getAgriculturalPlot);
+  const allBarangays = useQuery(api.barangays.get)
+  const allMapMarkers = useQuery(api.mapMarkers.getAllMapMarkers)
+  const [position, setPosition] = useState({
+    lat: 15.24559014,  // Centered between the 3 barangays
+    lng: 120.73375338, // Centered between the 3 barangays
+    zoom: 15     // Zoomed out to show all 3 barangays
   })
 
+  console.log(crops)
+  console.log(agriculturalPlot)
+  
   const [searchQuery, setSearchQuery] = useState(search || "")
+  const [selectedBarangay, setSelectedBarangay] = useState<string | null>(null)
 
   const coordinates: [number, number] = [position.lat, position.lng]
   
@@ -58,6 +68,38 @@ function MyMap() {
     barangay.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const handleSearch = () => {
+    if (filteredBarangays.length === 1) {
+      toast.success(`${filteredBarangays[0].name} selected`)
+      const barangay = filteredBarangays[0];
+      setPosition({
+        lat: barangay.coordinates[0][0],
+        lng: barangay.coordinates[0][1],
+        zoom: 14
+      });
+      if(barangay.name === "Mapinya") {
+        setPosition({
+          lat: 15.260086,
+          lng: 120.684951,
+            zoom: 20
+          });
+        } else if(barangay.name === "Turu") {
+          setPosition({
+            lat: 15.24559014,
+            lng: 120.73375338,
+            zoom: 20
+          });
+        } else {
+          setPosition({
+            lat: 15.2577,
+            lng: 120.7110,
+            zoom: 14
+          });
+        }
+      setSelectedBarangay(barangay.name);
+    }
+  };
+
   const polygonStyle = {
     fillColor: '#ffffff',
     fillOpacity: 0.5,
@@ -65,31 +107,49 @@ function MyMap() {
     weight: 2
   }
 
-  const chartData = barangays.map(barangay => ({
-    name: barangay.name,
-    Rice: barangay.resources.filter(resource => resource.name === "Rice").reduce((acc, resource) => acc + resource.production, 0),
-    Corn: barangay.resources.filter(resource => resource.name === "Corn").reduce((acc, resource) => acc + resource.production, 0),
-    Carrots: barangay.resources.filter(resource => resource.name === "Carrots").reduce((acc, resource) => acc + resource.production, 0),
-    Tomatoes: barangay.resources.filter(resource => resource.name === "Tomatoes").reduce((acc, resource) => acc + resource.production, 0),
-    Eggplant: barangay.resources.filter(resource => resource.name === "Eggplant").reduce((acc, resource) => acc + resource.production, 0)
-  }))
+  const chartData = allMapMarkers?.reduce((acc, marker) => {
+    if (!selectedBarangay || marker.barangay === selectedBarangay) {
+      const existing = acc.find(item => item.cropType === marker.markerType);
+      if (existing) {
+        existing.totalYields += marker.yields || 0;
+      } else {
+        acc.push({
+          cropType: marker.markerType,
+          totalYields: marker.yields || 0
+        });
+      }
+    }
+    return acc;
+  }, [] as { cropType: string, totalYields: number }[]);
 
-  const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#8dd1e1'];
+  // const formattedChartData = chartData?.map(data => ({
+  //   cropType: data.cropType.charAt(0).toUpperCase() + data.cropType.slice(1),
+  //   totalYields: `${data.totalYields} tons`
+  // }));
+
+  const COLORS = {
+    corn: '#FFD700', // Yellow
+    tomatoes: '#FF0000', // Red
+    eggplant: '#8A2BE2', // Violet
+    carrot: '#ffa500', // Orange
+    rice: '#D2B48C' // Light Brown
+  };
 
   return (
     <div className="space-y-4">
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 flex items-center space-x-2">
           <Input
             placeholder="Search barangays..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="max-w-sm"
           />
+          <Button onClick={handleSearch}>Search</Button>
         </CardContent>
       </Card>
 
-      <MapContainer center={coordinates} zoom={position.zoom} className='h-[600px] w-full'>
+      <MapContainer center={coordinates} zoom={position.zoom} className='h-[700px] w-full'>
         <LayersControl position="topright">
           <LayersControl.BaseLayer checked name="Default Map">
             <TileLayer
@@ -130,6 +190,9 @@ function MyMap() {
               <Polygon 
                 pathOptions={polygonStyle}
                 positions={barangay.coordinates as [number, number][]}
+                eventHandlers={{
+                  click: () => setSelectedBarangay(barangay.name)
+                }}
               >
                 <Popup>
                   <span>Barangay {barangay.name}<br/>Magalang, Pampanga</span>
@@ -144,29 +207,58 @@ function MyMap() {
                       dataKey="value"
                     >
                       {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`cell-${index}`} fill={COLORS[entry.name.toLowerCase() as keyof typeof COLORS]} />
                       ))}
                     </Pie>
                     <Tooltip />
                   </PieChart>
                 </Popup>
               </Polygon>
-              {barangay.resources.map((resource, index) => (
+              {allMapMarkers?.filter(marker => marker.barangay === barangay.name).map((marker, index) => (
                 <Marker
                   key={`${barangay.name}-resource-${index}`}
-                  position={resource.coordinates as [number, number]}
+                  position={marker.coordinates as [number, number]}
                   icon={L.icon({
-                    iconUrl: resource.icon,
+                    iconUrl: marker.markerType === "rice" ? rice.src : marker.markerType === "corn" ? corn.src : marker.markerType === "carrot" ? carrot.src : marker.markerType === "tomatoes" ? tomatoes.src : eggplant.src,
                     iconSize: [70, 50], // Increased size of the markers
                     iconAnchor: [16, 32],
                     popupAnchor: [0, -32]
                   })}
                 >
                   <Popup>
-                    <div>
-                      <h3 className="font-bold">{resource.name}</h3>
-                      <p>{resource.description}</p>
-                      <p>Production: {resource.production}</p>
+                    <div className="p-4 space-y-2">
+                      <p className="font-bold text-lg capitalize">{marker.title}</p>
+                      <p className="text-sm text-gray-700"><span className="font-semibold">Current Crop Type:</span> <span className="font-medium">{marker.markerType}</span></p>
+                      <p className="text-sm text-gray-700"><span className="font-semibold">Barangay:</span> <span className="font-medium">{marker.barangay}</span></p>
+            
+                      {agriculturalPlot?.some(plot => plot.markerId === marker._id) && (
+                        <div className="space-y-1">
+                          <div className="text-sm text-gray-700"><span className="font-semibold">Area:</span> <span className="font-medium">{agriculturalPlot.find(plot => plot.markerId === marker._id)?.area} hectares</span></div>
+                          {crops?.filter(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === marker._id)?._id).map((crop, cropIndex) => (
+                            <div key={cropIndex} className="space-y-2">
+                              <p className="text-sm text-gray-700"><span className="font-semibold">Planting Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.plantingDate)}</span></p>
+                              <p className="text-sm text-gray-700"><span className="font-semibold">Harvest Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.harvestDate)}</span></p>
+                              <p className="text-sm text-gray-700"><span className="font-semibold">Possible Yields:</span> <span className="font-medium">{crop.yields} tons</span></p>
+                            </div>
+                          ))}
+                          <p className="text-sm text-gray-700 capitalize"><span className="font-semibold">Land Use Types:</span> <br/>{agriculturalPlot.find(plot => plot.markerId === marker._id)?.landUseType.map((type, index) => (
+                            <span key={index} className="inline-flex items-center mr-2">
+                              {type === 'corn' && <Image src={corn.src} alt="Corn" className="inline-block w-6 h-6 mr-1" />}
+                              {type === 'rice' && <Image src={rice.src} alt="Rice" className="inline-block w-6 h-6 mr-1" />}
+                              {type === 'carrots' && <Image src={carrot.src} alt="Carrot" className="inline-block w-6 h-6 mr-1" />}
+                              {type === 'tomatoes' && <Image src={tomatoes.src} alt="Tomatoes" className="inline-block w-6 h-6 mr-1" />}
+                              {type === 'eggplant' && <Image src={eggplant.src} alt="Eggplant" className="inline-block w-6 h-6 mr-1" />}
+                              <span className="font-medium">{type}</span>
+                            </span>
+                          ))}</p>
+                          <p className="text-sm text-gray-700"><span className="font-semibold">Status:</span> <Badge className="ml-1">{agriculturalPlot.find(plot => plot.markerId === marker._id)?.status}</Badge></p>
+                        </div>
+                      )}
+                      <div className="flex justify-end mt-2">
+                        <Button variant="link" onClick={() => window.location.href = `/details/${marker._id}`}>
+                          More Details
+                        </Button>
+                      </div>
                     </div>
                   </Popup>
                 </Marker>
@@ -175,29 +267,80 @@ function MyMap() {
           )
         })}
       </MapContainer>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Agricultural Production by Barangay</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="Rice" fill="#8884d8" />
-                <Bar dataKey="Corn" fill="#82ca9d" />
-                <Bar dataKey="Carrots" fill="#ffc658" />
-                <Bar dataKey="Tomatoes" fill="#ff8042" />
-                <Bar dataKey="Eggplant" fill="#8dd1e1" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Agricultural Production by Crop Type</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="cropType" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `${value} tons`} />
+                  <Bar dataKey="totalYields" name="Total Yields">
+                    {chartData?.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className=''>
+          <CardHeader>
+            <CardTitle>Agricultural Production by Crop Type</CardTitle>
+          </CardHeader>
+          <CardContent>
+          <div className="mt-4 flex justify-center items-center">
+              <ul className="list-none grid grid-cols-5">
+                {chartData?.map((entry, index) => (
+                  <li key={`legend-${index}`} className="flex items-center">
+                    <span
+                      className="inline-block w-10 h-3 mr-2"
+                      style={{ backgroundColor: COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS] }}
+                    ></span>
+                    <span className="capitalize">{entry.cropType}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    dataKey="totalYields"
+                    nameKey="cropType"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={150}
+                    fill="#8884d8"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {chartData?.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    formatter={(value, name, props: any) => [
+                      `${value} tons ${props?.payload?.[0]?.percent ? `(${(props.payload[0].percent * 100).toFixed(2)}%)` : ''}`,
+                      name
+                    ]} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

@@ -54,3 +54,31 @@ export const getMapMarkers = query({
             .collect();
     }
 })
+
+
+export const getAllMapMarkers = query({
+    args:{
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db.query("mapMarkers")
+            .collect();
+    }
+})
+
+
+export const updateMapMarker = mutation({
+    args: {
+        markerId: v.id("mapMarkers"),
+        title: v.string(),
+        markerType: v.string()
+    },
+    handler: async (ctx, args) => {
+        const marker = await ctx.db.get(args.markerId);
+        if (!marker) throw new Error("Marker not found");
+
+        await ctx.db.patch(args.markerId, {
+            title: args.title,
+            markerType: args.markerType
+        })
+    }
+})
