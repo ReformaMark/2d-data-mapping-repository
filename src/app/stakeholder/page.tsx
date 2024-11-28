@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,11 +8,14 @@ import MaPinya from '@/../public/images/brgy-balitucan-mapinya-logo.jpg'
 
 function Dashboard() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Link href="/stakeholder/production-analysis?search=Turu">
-        <Card className="group hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+      <Link href="/stakeholder/production-analysis?search=Turu" className='contents'>
+        <Card className="group hover:shadow-lg transition-shadow duration-200 p-0 space-y-5">
+          <CardHeader className='p-0'>
+            <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Barangay Turu</CardTitle>
+          </CardHeader>
+          <CardContent className='p-0 flex flex-col justify-between '>
+            <div className="relative w-36 h-36 md:w-40 md:h-40 mb-4 overflow-hidden rounded-full mx-auto">
               <Image
                 src={Turu}
                 alt="Barangay Turu"
@@ -21,19 +24,19 @@ function Dashboard() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <CardTitle>Barangay Turu</CardTitle>
-            <CardDescription>Magalang, Pampanga</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Barangay Turu crop production focused on Corns and Rice.</p>
           </CardContent>
+          <CardFooter className='bg-gray-50 px-8 md:px-10 py-4 md:py-5 text-muted-foreground h-20 md:h-24 min-h-fit'>
+            Barangay Turu crop production focused on Corns and Rice.
+          </CardFooter>
         </Card>
       </Link>
-
-      <Link href="/stakeholder/production-analysis?search=Balitucan">
-        <Card className="group hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+      <Link href="/stakeholder/production-analysis?search=Balitucan" className='contents'>
+        <Card className="group hover:shadow-lg transition-shadow duration-200 p-0 space-y-5">
+          <CardHeader className='p-0'>
+            <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Barangay Balitucan</CardTitle>
+          </CardHeader>
+          <CardContent className='p-0 flex flex-col justify-between '>
+            <div className="relative w-36 h-36 md:w-40 md:h-40 mb-4 overflow-hidden rounded-full mx-auto">
               <Image
                 src={Balitucan}
                 alt="Barangay Balitucan"
@@ -42,19 +45,19 @@ function Dashboard() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <CardTitle>Barangay Balitucan</CardTitle>
-            <CardDescription>Magalang, Pampanga</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Barangay Balitucan focuses on Corns and Rice as well as few other crops such as tomatoes and carrots.</p>
           </CardContent>
+          <CardFooter className='text-muted-foreground px-8 md:px-10 py-4 md:py-5 bg-gray-50 h-20 md:h-24 min-h-fit'>
+            Barangay Balitucan focuses on Corns and Rice as well as few other crops such as tomatoes and carrots.
+          </CardFooter>
         </Card>
       </Link>
-
-      <Link href="/stakeholder/production-analysis?search=Mapinya">
-        <Card className="group hover:shadow-lg transition-shadow duration-200">
-          <CardHeader>
-            <div className="relative w-48 h-48 mb-4 overflow-hidden rounded-full mx-auto">
+      <Link href="/stakeholder/production-analysis?search=Mapinya" className='contents'>
+        <Card className="group hover:shadow-lg transition-shadow duration-200 p-0 space-y-5">
+          <CardHeader className='p-0'>
+            <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Barangay Mapinya</CardTitle>
+          </CardHeader>
+          <CardContent className='p-0 flex flex-col justify-between '>
+            <div className="relative w-36 h-36 md:w-40 md:h-40 mb-4 overflow-hidden rounded-full mx-auto">
               <Image
                 src={MaPinya}
                 alt="Barangay Ma Pinya"
@@ -63,12 +66,10 @@ function Dashboard() {
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
-            <CardTitle>Barangay Mapinya</CardTitle>
-            <CardDescription>Magalang, Pampanga</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">Focused on Corns and Rice along with Eggplant and tomatoes.</p>
           </CardContent>
+          <CardFooter className='text-muted-foreground px-8 md:px-10 py-4 md:py-5 bg-gray-50 h-20 md:h-24 min-h-fit'>
+            Barangay Mapinya are also focused on Corns and Rice along with Eggplant and tomatoes.
+          </CardFooter>
         </Card>
       </Link>
     </div>

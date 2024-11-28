@@ -168,6 +168,7 @@ const schema = defineSchema({
         yields: v.optional(v.number()), // in kilograms
     }).index("by_plotId", ["plotId"]),
 
+    
     // Production Data table
     productionData: defineTable({
         barangayId: v.id("barangays"),

@@ -51,11 +51,11 @@ function FarmsPage() {
                   <span className="font-normal capitalize">
                     {farm.cropHistory.map((crop, index) => (
                       <span key={index} className="inline-flex items-center mr-2">
-                        {crop?.name === 'corn' && <Image src={corn.src} alt="Corn" className="inline-block w-6 h-6 mr-1" />}
-                        {crop?.name === 'rice' && <Image src={rice.src} alt="Rice" className="inline-block w-6 h-6 mr-1" />}
-                        {crop?.name === 'carrots' && <Image src={carrot.src} alt="Carrot" className="inline-block w-6 h-6 mr-1" />}
-                        {crop?.name === 'tomatoes' && <Image src={tomatoes.src} alt="Tomatoes" className="inline-block w-6 h-6 mr-1" />}
-                        {crop?.name === 'eggplant' && <Image src={eggplant.src} alt="Eggplant" className="inline-block w-6 h-6 mr-1" />}
+                        {crop?.name === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="inline-block w-6 h-6 mr-1" />}
+                        {crop?.name === 'rice' && <Image height={200} width={200} src={rice.src} alt="Rice" className="inline-block w-6 h-6 mr-1" />}
+                        {crop?.name === 'carrots' && <Image height={200} width={200} src={carrot.src} alt="Carrot" className="inline-block w-6 h-6 mr-1" />}
+                        {crop?.name === 'tomatoes' && <Image height={200} width={200} src={tomatoes.src} alt="Tomatoes" className="inline-block w-6 h-6 mr-1" />}
+                        {crop?.name === 'eggplant' && <Image height={200} width={200} src={eggplant.src} alt="Eggplant" className="inline-block w-6 h-6 mr-1" />}
                         <span className="font-medium">{crop?.name}</span>
                       </span>
                     ))}
@@ -66,11 +66,11 @@ function FarmsPage() {
                   <span className="font-normal capitalize">
                     {farm.landUseType.map((type, index) => (
                       <span key={index} className="inline-flex items-center mr-2">
-                        {type === 'corn' && <Image src={corn.src} alt="Corn" className="inline-block w-6 h-6 mr-1" />}
-                        {type === 'rice' && <Image src={rice.src} alt="Rice" className="inline-block w-6 h-6 mr-1" />}
-                        {type === 'carrots' && <Image src={carrot.src} alt="Carrot" className="inline-block w-6 h-6 mr-1" />}
-                        {type === 'tomatoes' && <Image src={tomatoes.src} alt="Tomatoes" className="inline-block w-6 h-6 mr-1" />}
-                        {type === 'eggplant' && <Image src={eggplant.src} alt="Eggplant" className="inline-block w-6 h-6 mr-1" />}
+                        {type === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="inline-block w-6 h-6 mr-1" />}
+                        {type === 'rice' && <Image height={200} width={200} src={rice.src} alt="Rice" className="inline-block w-6 h-6 mr-1" />}
+                        {type === 'carrots' && <Image height={200} width={200} src={carrot.src} alt="Carrot" className="inline-block w-6 h-6 mr-1" />}
+                        {type === 'tomatoes' && <Image height={200} width={200} src={tomatoes.src} alt="Tomatoes" className="inline-block w-6 h-6 mr-1" />}
+                        {type === 'eggplant' && <Image height={200} width={200} src={eggplant.src} alt="Eggplant" className="inline-block w-6 h-6 mr-1" />}
                         <span className="font-medium">{type}</span>
                       </span>
                     ))}
