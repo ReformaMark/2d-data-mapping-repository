@@ -23,13 +23,13 @@ export function AuditLogsTable() {
         from: Date
         to: Date | undefined
     }>({
-        from: new Date(new Date().setDate(new Date().getDate() - 30)), // Last 30 days
-        to: new Date(),
+        from: new Date(new Date().setHours(0, 0, 0, 0)), // Start of day
+        to: new Date(new Date().setHours(23, 59, 59, 999)), // End of day
     })
 
     const logs = useQuery(api.admin.getAuditLogs, {
         startDate: dateRange.from.getTime(),
-        endDate: dateRange.to?.getTime() ?? new Date().getTime(),
+        endDate: dateRange.to ? new Date(dateRange.to.setHours(23, 59, 59, 999)).getTime() : new Date().getTime(),
     })
 
     const handleExport = () => {
