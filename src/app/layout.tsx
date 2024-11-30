@@ -17,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Agrimaps",
-  description: "Agrimaps is a platform for mapping agricultural plots and resources in the Philippines.",
+  title: "2d Data Mapping Repository",
+  description: "2d Data mapping repository is a platform for mapping agricultural plots and resources in the Philippines.",
 };
 
 export default function RootLayout({

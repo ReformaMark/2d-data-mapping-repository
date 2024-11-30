@@ -29,7 +29,7 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
             <header className="bg-gray-100 p-6 flex justify-between items-center">
                 <h1 className="text-3xl font-bold flex gap-x-10 uppercase"><Mountain className='text-green' color='green'/> {farm.mapMarker?.title}</h1>
                 {user?.data?._id !== farm.userId && (
-                    <Link href={`/stakeholder/message?sendMessageTo=${farm.user._id}`} className='flex flex-col items-center justify-center hover:text-green-500 transition-colors duration-300 ease-in'><MessageSquareIcon/><h5>Send Message</h5></Link>
+                    <Link href={`/farmer/message?sendMessageTo=${farm.user._id}`} className='flex flex-col items-center justify-center hover:text-green-500 transition-colors duration-300 ease-in'><MessageSquareIcon/><h5>Send Message</h5></Link>
                 )}
             </header>
             <section className="p-6 space-y-6 ">

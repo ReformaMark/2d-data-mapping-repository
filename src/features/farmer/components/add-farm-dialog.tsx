@@ -39,7 +39,7 @@ const FormSchema = z.object({
     message: "Please provide a planting date.",
   }),
   harvestDate: z.string().optional(),
-  yields: z.coerce.number().positive({
+  possibleYields: z.coerce.number().positive({
     message: "Yield must be a positive number.",
   }),
   landUseType: z.array(z.string()).nonempty({
@@ -91,7 +91,7 @@ export function AddFarmDialog({
         status: '',
         plantingDate: '',
         harvestDate: '',
-        yields: 0,
+        possibleYields: 0,
         landUseType: [],
       },
     });
@@ -125,7 +125,7 @@ export function AddFarmDialog({
               name: data.markerType,
               plantingDate: data.plantingDate,
               harvestDate: data.harvestDate,
-              yields: data.yields,
+              possibleYields: data.possibleYields,
           });
           // Add crop cropHistory
           await addPlots({
@@ -269,7 +269,7 @@ export function AddFarmDialog({
                 )}
               />
               <FormField
-                name="yields"
+                name="possibleYields"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Yield (tons)</FormLabel>

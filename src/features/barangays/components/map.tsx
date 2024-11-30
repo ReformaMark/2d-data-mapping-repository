@@ -17,7 +17,7 @@ import tomatoes from '@/../public/images/tomatoes.png';
 import eggplant from '@/../public/images/eggplant.png';
 import { useQuery } from 'convex/react'
 import { api } from '../../../../convex/_generated/api'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
 import { formatDateToMonthYear } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -38,6 +38,7 @@ function MyMap() {
   const agriculturalPlot = useQuery(api.agriculturalPlots.getAgriculturalPlot);
   const allBarangays = useQuery(api.barangays.get)
   const allMapMarkers = useQuery(api.mapMarkers.getAllMapMarkers)
+  const router = useRouter()
   const [position, setPosition] = useState({
     lat: 15.24559014,  // Centered between the 3 barangays
     lng: 120.73375338, // Centered between the 3 barangays
@@ -122,11 +123,6 @@ function MyMap() {
     return acc;
   }, [] as { cropType: string, totalYields: number }[]);
 
-  // const formattedChartData = chartData?.map(data => ({
-  //   cropType: data.cropType.charAt(0).toUpperCase() + data.cropType.slice(1),
-  //   totalYields: `${data.totalYields} tons`
-  // }));
-
   const COLORS = {
     corn: '#FFD700', // Yellow
     tomatoes: '#FF0000', // Red
@@ -195,8 +191,8 @@ function MyMap() {
                 }}
               >
                 <Popup>
-                  <span>Barangay {barangay.name}<br/>Magalang, Pampanga</span>
-                  <PieChart width={200} height={200}>
+                  <span className='font-semibold'>Barangay {barangay.name}<br/>Magalang, Pampanga</span>
+                  {/* <PieChart width={200} height={200}>
                     <Pie
                       data={pieData}
                       cx={100}
@@ -211,7 +207,7 @@ function MyMap() {
                       ))}
                     </Pie>
                     <Tooltip />
-                  </PieChart>
+                  </PieChart> */}
                 </Popup>
               </Polygon>
               {allMapMarkers?.filter(marker => marker.barangay === barangay.name).map((marker, index) => (
@@ -238,7 +234,7 @@ function MyMap() {
                             <div key={cropIndex} className="space-y-2">
                               <p className="text-sm text-gray-700"><span className="font-semibold">Planting Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.plantingDate)}</span></p>
                               <p className="text-sm text-gray-700"><span className="font-semibold">Harvest Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.harvestDate)}</span></p>
-                              <p className="text-sm text-gray-700"><span className="font-semibold">Possible Yields:</span> <span className="font-medium">{crop.yields} tons</span></p>
+                              <p className="text-sm text-gray-700"><span className="font-semibold">Possible Yields:</span> <span className="font-medium">{crop.possibleYields} tons</span></p>
                             </div>
                           ))}
                           <p className="text-sm text-gray-700 capitalize"><span className="font-semibold">Land Use Types:</span> <br/>{agriculturalPlot.find(plot => plot.markerId === marker._id)?.landUseType.map((type, index) => (
@@ -255,7 +251,10 @@ function MyMap() {
                         </div>
                       )}
                       <div className="flex justify-end mt-2">
-                        <Button variant="link" onClick={() => window.location.href = `/details/${marker._id}`}>
+                        <Button variant="link" onClick={() => {
+                          const find = agriculturalPlot?.find(plot => plot.markerId === marker._id)
+                          router.push(`/stakeholder/farms/${find?._id}`)
+                        }}>
                           More Details
                         </Button>
                       </div>
@@ -267,80 +266,81 @@ function MyMap() {
           )
         })}
       </MapContainer>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Agricultural Production by Crop Type</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="cropType" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => `${value} tons`} />
-                  <Bar dataKey="totalYields" name="Total Yields">
+      {selectedBarangay && (
+        <>
+          <div className="text-center text-xl font-semibold my-4">Production Analysis for {selectedBarangay}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Agricultural Production by Crop Type</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="cropType" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => `${value} tons`} />
+                      <Bar dataKey="totalYields" name="Total Yields">
+                        {chartData?.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className=''>
+              <CardHeader>
+                <CardTitle>Agricultural Production by Crop Type</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mt-4 flex justify-center items-center">
+                  <ul className="list-none grid grid-cols-5">
                     {chartData?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
+                      <li key={`legend-${index}`} className="flex items-center">
+                        <span
+                          className="inline-block w-10 h-3 mr-2"
+                          style={{ backgroundColor: COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS] }}
+                        ></span>
+                        <span className="capitalize">{entry.cropType}</span>
+                      </li>
                     ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className=''>
-          <CardHeader>
-            <CardTitle>Agricultural Production by Crop Type</CardTitle>
-          </CardHeader>
-          <CardContent>
-          <div className="mt-4 flex justify-center items-center">
-              <ul className="list-none grid grid-cols-5">
-                {chartData?.map((entry, index) => (
-                  <li key={`legend-${index}`} className="flex items-center">
-                    <span
-                      className="inline-block w-10 h-3 mr-2"
-                      style={{ backgroundColor: COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS] }}
-                    ></span>
-                    <span className="capitalize">{entry.cropType}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    dataKey="totalYields"
-                    nameKey="cropType"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={150}
-                    fill="#8884d8"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {chartData?.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    formatter={(value, name, props: any) => [
-                      `${value} tons ${props?.payload?.[0]?.percent ? `(${(props.payload[0].percent * 100).toFixed(2)}%)` : ''}`,
-                      name
-                    ]} 
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          
-          </CardContent>
-        </Card>
-      </div>
+                  </ul>
+                </div>
+                <div className="h-[400px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        dataKey="totalYields"
+                        nameKey="cropType"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={150}
+                        fill="#8884d8"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {chartData?.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value, name, props: any) => [
+                          `${value} tons ${props?.payload?.[0]?.percent ? `(${(props.payload[0].percent * 100).toFixed(2)}%)` : ''}`,
+                          name
+                        ]} 
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
   )
 }

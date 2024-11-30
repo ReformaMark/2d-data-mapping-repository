@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
 import dynamic from "next/dynamic"
+import Loading from "@/components/loading"
 
 const Map = dynamic(() => import("@/features/barangays/components/map"), {
     ssr: false,
@@ -33,7 +34,7 @@ export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
         name: barangayName      
     })
 
-    if (!plots) return <div>Loading...</div>
+    if (!plots) return <Loading/>
 
     const statusColors = {
         active: "default",

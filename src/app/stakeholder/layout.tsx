@@ -15,7 +15,7 @@ function StakeholdersLayout({ children }: { children: React.ReactNode }) {
                         header="Stakeholder Portal"
                         value="stakeholder"
                     />
-                    <div className="flex-1 overflow-y-auto p-4">
+                    <div className="block w-full overflow-y-auto p-4">
                         {children}
                     </div>
                     <Toaster />

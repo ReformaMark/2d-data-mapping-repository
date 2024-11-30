@@ -39,7 +39,7 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => {
           // Handle Dashboard and Reports as standalone items
-          if (item.title === "Dashboard" || item.title === "Employee List" || item.title === "Vouchers" || item.title === "Payroll Sheet" || item.title === "Support") {
+          if (item.title === "Dashboard" || item.title === "Employee List" || item.title === "Vouchers" || item.title === "Payroll Sheet" || item.title === "Support" || item.title === "Farms" || item.title === "Map") {
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton

@@ -60,6 +60,7 @@ const schema = defineSchema({
         title: v.string(),
         description: v.optional(v.string()),
         markerType: v.string(), // "plot" | "landmark" | "facility"
+       
         yields: v.optional(v.number()),
     }).index("by_userId", ["userId"]),
 
@@ -165,10 +166,11 @@ const schema = defineSchema({
         name: v.string(),
         plantingDate: v.string(), // ISO date string
         harvestDate: v.optional(v.string()), // ISO date string
-        yields: v.optional(v.number()), // in kilograms
+        possibleYields: v.optional(v.number()), // in tons
+        actualYeilds: v.optional(v.number())
     }).index("by_plotId", ["plotId"]),
 
-    
+
     // Production Data table
     productionData: defineTable({
         barangayId: v.id("barangays"),
@@ -200,6 +202,34 @@ const schema = defineSchema({
         details: v.string(), // Additional context
         timestamp: v.number(), // Unix timestamp
     }).index("by_timestamp", ["timestamp"]),
+
+    // Announcements table
+    announcements: defineTable({
+        title: v.string(),
+        additionalInformation: v.optional(v.string()),
+        content: v.string(),
+        updatedAt: v.optional(v.string()), // ISO date string
+        isActive: v.boolean(), // Whether the announcement is currently active
+    }),
+    activities: defineTable({
+        title: v.string(),
+        additionalInformation: v.optional(v.string()),
+        content: v.string(),
+        updatedAt: v.optional(v.string()),
+        userId: v.id('users'),
+        isRead: v.boolean(),
+        isArchived: v.boolean(),
+    }).index('by_userId', ['userId']),
+    // Chat table
+
+    chats: defineTable({
+        senderId: v.id("users"), // User who sent the message
+        receiverId: v.id("users"), // User who received the message
+        message: v.string(), // Content of the message
+        isRead: v.boolean(), // Whether the message has been read
+    }).index("by_sender_receiver", ["senderId", "receiverId"])
+      .index("by_receiver", ["receiverId"])
 });
+ 
 
 export default schema;

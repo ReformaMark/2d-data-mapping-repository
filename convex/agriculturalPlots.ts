@@ -58,12 +58,25 @@ export const addPlots = mutation({
         const totalYields = await Promise.all(
             agriculturalPlot.cropHistory.map(async (cropId) => {
                 const crop = await ctx.db.get(cropId);
-                return crop ? crop.yields || 0 : 0;
+                return crop ? crop.possibleYields || 0 : 0;
             })
         ).then(yields => yields.reduce((acc, yld) => acc + yld, 0));
 
         await ctx.db.patch(markerId, {
             yields: totalYields,
+        });
+
+        const marker = await ctx.db.get(markerId);
+        if (!marker) throw new Error("Marker not found");
+
+        const barangay = await ctx.db.get(agriculturalPlot.barangayId);
+        if (!barangay) throw new Error("Barangay not found");
+
+        await ctx.db.insert("announcements", {
+            title: `${marker.title}`,
+            content: `A new farm location titled "${marker.title}" has been added to barangay ${barangay.name}.`,
+            additionalInformation: plot._id,
+            isActive: true
         });
 
         return agriculturalPlot;
@@ -114,14 +127,47 @@ export const getFarmById = query({
                 return crop || null;
             })
         );
+        const user = await ctx.db.get(farm.userId);
+        if (!user) throw new Error("User not found");
 
         return {
             ...farm,
             mapMarker,
-            cropHistory: cropHistory.filter(crop => crop !== null)
+            cropHistory: cropHistory.filter(crop => crop !== null),
+            user
         };
-    }
-});
+    }});
+
+    
+export const getFarmByUserId = query({
+  
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx)
+        if (userId === null) return;
+
+        const farm = await ctx.db.query('agriculturalPlots')
+            .filter(q => q.eq(q.field("userId"), userId))
+            .first();
+
+        if (!farm) throw new Error("Farm not found");
+
+        const mapMarker = await ctx.db.get(farm.markerId);
+        const cropHistory = await Promise.all(
+            farm.cropHistory.map(async (cropId) => {
+                const crop = await ctx.db.get(cropId);
+                return crop || null;
+            })
+        );
+        const user = await ctx.db.get(farm.userId);
+        if (!user) throw new Error("User not found");
+
+        return {
+            ...farm,
+            mapMarker,
+            cropHistory: cropHistory.filter(crop => crop !== null),
+            user
+        };
+    }});
 
 export const addCropManagement = mutation({
     args: {
@@ -154,6 +200,73 @@ export const addCropManagement = mutation({
         return cropManagement;
     }
 });
+
+
+export const updateFarmInfo = mutation({
+    args:{
+        plotId: v.id('agriculturalPlots'),
+        markerId: v.id('mapMarkers'),
+        cropId: v.id("crops"),
+        cropName: v.string(),
+        area: v.number(),
+        status: v.string(),
+        landUseType: v.array(v.string()),
+        possibleYields: v.number(),
+        farmName: v.string()
+    },
+
+    handler: async(ctx, args) =>{
+        await ctx.db.patch(args.plotId, {
+            area: args.area,
+            status: args.status,
+            landUseType: args.landUseType,
+        });
+        await ctx.db.patch(args.markerId,{
+            title: args.farmName,
+            yields: args.possibleYields,
+            markerType: args.cropName
+        });
+
+        await ctx.db.patch(args.cropId,{
+            possibleYields: args.possibleYields,
+            name: args.cropName
+        })
+    }   
+
+})
+
+export const updateCropManagement = mutation({
+    args: {
+        agriculturalPlotId: v.id('agriculturalPlots'),
+        cropManagement: v.object({
+            fertilizerApplication: v.object({
+                type: v.string(),
+                quantity: v.number(),
+                applicationSchedule: v.string(),
+            }),
+            pestAndDiseaseControl: v.object({
+                pests: v.array(v.string()),
+                diseases: v.array(v.string()),
+                controlMeasures: v.array(v.string()),
+            }),
+            cropRotationPlan: v.object({
+                schedule: v.string(),
+            }),
+            growthMonitoring: v.object({
+                growthStage: v.string(),
+                healthAssessments: v.array(v.string()),
+            }),
+            harvestingMethods: v.string(), // "manual" | "mechanized"
+        }),
+    },
+    handler: async (ctx, args) => {
+        const cropManagement = await ctx.db.patch(args.agriculturalPlotId, {
+            cropManagement: args.cropManagement,
+        });
+        return cropManagement;
+    }
+});
+
 
 export const updateAgriculturalPlot = mutation({
     args: {

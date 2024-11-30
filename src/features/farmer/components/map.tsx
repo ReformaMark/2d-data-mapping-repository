@@ -111,7 +111,7 @@ export function FarmerMap() {
       status: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.status || '',
       plantingDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.plantingDate || '',
       harvestDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.harvestDate || '',
-      yields: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.yields || 0,
+      yields: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.possibleYields || 0,
       landUseType: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.landUseType || [],
     },
   });
@@ -249,7 +249,7 @@ export function FarmerMap() {
                       <div key={cropIndex} className="space-y-1">
                         <p className="text-sm text-gray-700"><span className="font-semibold">Planting Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.plantingDate)}</span></p>
                         <p className="text-sm text-gray-700"><span className="font-semibold">Harvest Date:</span> <span className="font-medium">{formatDateToMonthYear(crop.harvestDate)}</span></p>
-                        <p className="text-sm text-gray-700"><span className="font-semibold">Yields:</span> <span className="font-medium">{crop.yields} tons</span></p>
+                        <p className="text-sm text-gray-700"><span className="font-semibold">Yields:</span> <span className="font-medium">{crop.possibleYields} tons</span></p>
                       </div>
                     ))}
                     <p className="text-sm text-gray-700 capitalize"><span className="font-semibold">Land Use Types:</span> <br/>{agriculturalPlot.find(plot => plot.markerId === marker._id)?.landUseType.map((type, index) => (

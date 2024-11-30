@@ -12,11 +12,13 @@ import {
 import { useCurrentUser } from "@/features/users/api/use-current-user";
 import {
   FileText,
-  HelpCircle,
   LayoutDashboard,
   LineChart,
+  List,
   Map,
+  MapIcon,
   MessageSquare,
+  Settings,
   Users
 } from "lucide-react";
 import Link from "next/link";
@@ -141,25 +143,21 @@ export function AppSidebar({
   ];
 
   const stakeholderNav = [
+   
     {
       title: "Dashboard",
       url: "/stakeholder",
       icon: LayoutDashboard,
     },
     {
-      title: "Agricultural Data",
-      url: "/stakeholder/data",
-      icon: LineChart,
-      items: [
-        {
-          title: "Farm Locator",
-          url: "/stakeholder/production-analysis",
-        },
-        {
-          title: "Farms",
-          url: "/stakeholder/farms",
-        },
-      ],
+      title: "Map",
+      url: "/stakeholder/production-analysis",
+      icon: MapIcon,
+    },
+    {
+      title: "Farms",
+      url: "/stakeholder/farms",
+      icon: List,
     },
     {
       title: "Communication",
@@ -168,18 +166,24 @@ export function AppSidebar({
       items: [
         {
           title: "Announcements",
-          url: "/stakeholder/messages/announcements",
+          url: "/stakeholder/announcements",
         },
         {
           title: "Direct Messages",
-          url: "/stakeholder/messages/inbox",
+          url: "/stakeholder/message",
         },
       ],
     },
     {
-      title: "Support",
+      title: "Settings",
       url: "/support",
-      icon: HelpCircle,
+      icon: Settings,
+      items: [
+        {
+          title: "Profile",
+          url: "/stakeholder/profile",
+        }
+      ]
     },
   ];
 
@@ -195,25 +199,24 @@ export function AppSidebar({
       icon: LineChart,
       items: [
         {
-          title: "Crop Management",
-          url: "/farmer/crop-management",
+          title: "My Farm",
+          url: "/farmer/my-farm",
         },
         {
-          title: "Soil Health",
-          url: "/farmer/soil-health",
+          title: "Farms",
+          url: "/farmer/farms",
         },
+        
+      ],
+    },
+    {
+      title: "Communication",
+      url: "/farmer/message",
+      icon: MessageSquare,
+      items: [
         {
-          title: "Irrigation Systems",
-          url: "/farmerirrigation-systems",
-        },
-       
-        {
-          title: "Financial Information",
-          url: "/farmer/financial-information",
-        },
-        {
-          title: "Farm Infrastructure",
-          url: "/farmer/farm-infrastructure",
+          title: "Direct Messages",
+          url: "/stakeholder/message",
         },
       ],
     },

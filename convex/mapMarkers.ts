@@ -25,7 +25,7 @@ export const createMapMarker = mutation({
             userId: userId,
             title: args.title,
             markerType: args.markerType,
-            barangay: barangay.name
+            barangay: barangay.name,
         });
         const marker = await ctx.db.get(markerId);
         if (!marker) throw new Error("Marker not found");

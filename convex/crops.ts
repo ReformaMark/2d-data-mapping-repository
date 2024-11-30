@@ -7,7 +7,7 @@ export const addCrop = mutation({
         name: v.string(),
         plantingDate: v.string(),
         harvestDate: v.optional(v.string()),
-        yields: v.optional(v.number()),
+        possibleYields: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         const crop = await ctx.db.insert("crops", {
@@ -15,7 +15,7 @@ export const addCrop = mutation({
             name: args.name,
             plantingDate: args.plantingDate,
             harvestDate: args.harvestDate,
-            yields: args.yields,
+            possibleYields: args.possibleYields,
         });
         const cropId = await ctx.db.get(crop);
         if (!cropId) throw new Error("Crop not found");
