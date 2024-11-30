@@ -14,9 +14,9 @@ import {
   SelectTrigger,
   SelectValue
 } from './select'
-import { ChevronUpIcon, ChevronDownIcon, CheckIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Switch } from './switch'
+import { cn } from '@/lib/utils'
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 
 export interface DateRangePickerProps {
   /** Click handler for applying the updates from DateRangePicker. */
