@@ -8,7 +8,6 @@ import { withAuthMiddleware } from "@/features/auth/components/auth-middleware";
 import { RoleCheck } from "@/features/auth/components/role-check";
 
 function StakeholdersLayout({ children }: { children: React.ReactNode }) {
-    const role = RoleCheck();
  
         return (
             <ConvexClientProvider>
