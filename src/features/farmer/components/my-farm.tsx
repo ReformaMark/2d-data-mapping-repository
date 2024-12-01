@@ -15,7 +15,6 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {useForm } from 'react-hook-form'
@@ -26,6 +25,10 @@ import {  FormControl, FormField, FormLabel, FormItem, FormMessage, Form } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import CropManagementForm, { FarmTypes } from './crop-management-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import SoilHealthForm from './soil-health-form'
+import IrrigationForm from './irrigation-form'
+import FarmInfrastructureForm from './farm-infrastructure-form'
+import OwnerForm from './owner-form'
 
 export default function MyFarm() {
     const farm = useQuery(api.agriculturalPlots.getFarmByUserId)
@@ -215,73 +218,71 @@ export default function MyFarm() {
                     )}
                 </div>
                 <Separator className='my-5'/>
-                <div>
-                    <div className='flex justify-between'>
-                        <h2 className="text-xl font-semibold">Soil Health</h2>
-                        <DialogSection title='' content='Soil'/>
-                    </div>
-                    {farm.soilInfo ? (
-                        <div className="space-y-2">
-                            <p>Type: {farm.soilInfo.type}</p>
-                            <p>pH Level: {farm.soilInfo.pH}</p>
-                            <p>Texture: {farm.soilInfo.texture}</p>
-                            <p>Nutrient Content: Nitrogen - {farm.soilInfo.nutrientContent.nitrogen}, Phosphorus - {farm.soilInfo.nutrientContent.phosphorus}, Potassium - {farm.soilInfo.nutrientContent.potassium}</p>
-                            <p>Moisture: Current - {farm.soilInfo.moisture.current}, Historical - {farm.soilInfo.moisture.historical.join(', ')}</p>
-                            <p>Erosion Risk: {farm.soilInfo.erosionRisk}</p>
+                <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-6">
+                        <div className='flex justify-between items-center'>
+                            <h2 className="text-2xl font-semibold text-gray-800">Soil Information</h2>
+                            <DialogSection title='Soil Information' content='Soil'/>
                         </div>
-                    ) : (
-                        <p>The owner or the farmer has not yet provided soil health information.</p>
-                    )}
-                </div>
-                <Separator className='my-5'/>
-                <div>
-                    <div className='flex justify-between'>
-                        <h2 className="text-xl font-semibold">Irrigation</h2>
-                        <DialogSection title='' content='Irrigation'/>
+                        {farm.soilInfo ? (
+                            <div className="space-y-2 text-gray-700">
+                                <p><strong>Type:</strong> {farm.soilInfo.type}</p>
+                                <p><strong>pH Level:</strong> {farm.soilInfo.pH}</p>
+                                <p><strong>Texture:</strong> {farm.soilInfo.texture}</p>
+                                <p><strong>Nutrient Content:</strong> Nitrogen - {farm.soilInfo.nutrientContent.nitrogen}, Phosphorus - {farm.soilInfo.nutrientContent.phosphorus}, Potassium - {farm.soilInfo.nutrientContent.potassium}</p>
+                                <p><strong>Moisture:</strong> Current - {farm.soilInfo.moisture.current}, Historical - {farm.soilInfo.moisture.historical.join(', ')}</p>
+                                <p><strong>Erosion Risk:</strong> {farm.soilInfo.erosionRisk}</p>
+                            </div>
+                        ) : (
+                            <p className="text-red-500">The owner or the farmer has not yet provided soil health information.</p>
+                        )}
                     </div>
-                    {farm.irrigationSystem ? (
-                        <div className="space-y-2">
-                            <p>System: {farm.irrigationSystem}</p>
-                            <p>Water Source: {farm.waterSource}</p>
-                            <p>Water Usage: {farm.waterUsage} liters</p>
-                            <p>Rainfall Data: Season - {farm.rainfallData?.season}, Amount - {farm.rainfallData?.rainfallAmount} mm</p>
+                    <div className="space-y-6">
+                        <div className='flex justify-between items-center'>
+                            <h2 className="text-2xl font-semibold text-gray-800">Irrigation</h2>
+                            <DialogSection title='' content='Irrigation'/>
                         </div>
-                    ) : (
-                        <p>The owner or the farmer has not yet provided irrigation information.</p>
-                    )}
-                </div>
-                <Separator className='my-5'/>
-                <div>
-                    <div className='flex justify-between'>
-                        <h2 className="text-xl font-semibold">Farm Infrastructure</h2>
-                        <DialogSection title='' content='Infrastructure'/>
+                        {farm.irrigationSystem ? (
+                            <div className="space-y-2 text-gray-700">
+                                <p><strong>System:</strong> {farm.irrigationSystem}</p>
+                                <p><strong>Water Source:</strong> {farm.waterSource}</p>
+                                <p><strong>Water Usage:</strong> {farm.waterUsage} liters</p>
+                                <p><strong>Rainfall Data:</strong> Season - {farm.rainfallData?.season}, Amount - {farm.rainfallData?.rainfallAmount} mm</p>
+                            </div>
+                        ) : (
+                            <p className="text-red-500">The owner or the farmer has not yet provided irrigation information.</p>
+                        )}
                     </div>
-                    {farm.farmInfrastructure ? (
-                        <div className="space-y-2">
-                            <p>Storage Facilities: {farm.farmInfrastructure.storageFacilities.join(', ')}</p>
-                            <p>Farm Equipment: {farm.farmInfrastructure.farmEquipment.join(', ')}</p>
-                            <p>Transportation: {farm.farmInfrastructure.transportation.join(', ')}</p>
+                    <div className="space-y-6">
+                        <div className='flex justify-between items-center'>
+                            <h2 className="text-2xl font-semibold text-gray-800">Farm Infrastructure</h2>
+                            <DialogSection title='' content='Infrastructure'/>
                         </div>
-                    ) : (
-                        <p>The owner or the farmer has not yet provided farm infrastructure information.</p>
-                    )}
-                </div>
-                <Separator className='my-5'/>
-                <div>
-                    <div className='flex justify-between'>
-                        <h2 className="text-xl font-semibold">Financial Information</h2>
-                        <DialogSection title='' content='Financial'/>
+                        {farm.farmInfrastructure ? (
+                            <div className="space-y-2 text-gray-700">
+                                <p><strong>Storage Facilities:</strong> {farm.farmInfrastructure.storageFacilities.join(', ')}</p>
+                                <p><strong>Farm Equipment:</strong> {farm.farmInfrastructure.farmEquipment.join(', ')}</p>
+                                <p><strong>Transportation:</strong> {farm.farmInfrastructure.transportation.join(', ')}</p>
+                            </div>
+                        ) : (
+                            <p className="text-red-500">The owner or the farmer has not yet provided farm infrastructure information.</p>
+                        )}
                     </div>
-                    {farm.financialInformation ? (
-                        <div className="space-y-2">
-                            <p>Input Costs: Seeds - {farm.financialInformation.inputCosts.seeds}, Fertilizers - {farm.financialInformation.inputCosts.fertilizers}, Labor - {farm.financialInformation.inputCosts.labor}, Equipment - {farm.financialInformation.inputCosts.equipment}</p>
-                            <p>Production Costs: Cost per Hectare - {farm.financialInformation.productionCosts.costPerHectare}</p>
-                            <p>Market Value: Current Price - {farm.financialInformation.marketValue.currentPrice}, Expected Price - {farm.financialInformation.marketValue.expectedPrice}</p>
-                            <p>Profit Margins: Expected Profit - {farm.financialInformation.profitMargins.expectedProfit}</p>
+                    <div className="space-y-6">
+                        <div className='flex justify-between items-center'>
+                            <h2 className="text-2xl font-semibold text-gray-800">Owner Information</h2>
+                            <DialogSection title='' content='Owner'/>
                         </div>
-                    ) : (
-                        <p>The owner or the farmer has not yet provided financial information.</p>
-                    )}
+                        {farm.ownership?.owner ? (
+                            <div className="space-y-2 text-gray-700">
+                                <p><strong>Owner Name:</strong> {farm.ownership.owner.name}</p>
+                                <p><strong>Owner Contact:</strong> {farm.ownership.owner.contact}</p>
+                                <p><strong>Owner Role:</strong> {farm.ownership.owner.role}</p>
+                            </div>
+                        ) : (
+                            <p className="text-red-500">The owner or the farmer has not yet provided owner information.</p>
+                        )}
+                    </div>
                 </div>
             </section>
         </article>
@@ -549,82 +550,31 @@ function DialogSection({ title, content }: { title: string; content: string }) {
             )
         }
 
-        if (content === 'Financial') {
+        if (content === 'Soil') {
             return (
                 <div className="space-y-4">
-                    <h1 className='text-xl font-semibold'>Financial Information</h1>
-                    <div>
-                        <Label htmlFor="seeds-cost" className="block">Seeds Cost</Label>
-                        <Input
-                            id="seeds-cost"
-                            type="number"
-                            placeholder="Enter seeds cost"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="fertilizers-cost" className="block">Fertilizers Cost</Label>
-                        <Input
-                            id="fertilizers-cost"
-                            type="number"
-                            placeholder="Enter fertilizers cost"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="labor-cost" className="block">Labor Cost</Label>
-                        <Input
-                            id="labor-cost"
-                            type="number"
-                            placeholder="Enter labor cost"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="equipment-cost" className="block">Equipment Cost</Label>
-                        <Input
-                            id="equipment-cost"
-                            type="number"
-                            placeholder="Enter equipment cost"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="cost-per-hectare" className="block">Cost per Hectare</Label>
-                        <Input
-                            id="cost-per-hectare"
-                            type="number"
-                            placeholder="Enter cost per hectare"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="current-market-price" className="block">Current Market Price</Label>
-                        <Input
-                            id="current-market-price"
-                            type="number"
-                            placeholder="Enter current market price"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="expected-market-price" className="block">Expected Market Price</Label>
-                        <Input
-                            id="expected-market-price"
-                            type="number"
-                            placeholder="Enter expected market price"
-                            className="border p-2 rounded"
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="expected-profit" className="block">Expected Profit</Label>
-                        <Input
-                            id="expected-profit"
-                            type="number"
-                            placeholder="Enter expected profit"
-                            className="border p-2 rounded"
-                        />
-                    </div>
+                    <SoilHealthForm farm={farm as FarmTypes} setIsOpen={setIsOpen}/>
+                </div>
+            );
+        }
+        if (content === 'Irrigation') {
+            return (
+                <div className="space-y-4">
+                    <IrrigationForm farm={farm as FarmTypes} setIsOpen={setIsOpen}/>
+                </div>
+            );
+        }
+        if (content === 'Infrastructure') {
+            return (
+                <div className="space-y-4">
+                    <FarmInfrastructureForm farm={farm as FarmTypes} setIsOpen={setIsOpen}/>
+                </div>
+            );
+        }
+        if (content === 'Owner') {
+            return (
+                <div className="space-y-4">
+                    <OwnerForm farm={farm as FarmTypes} setIsOpen={setIsOpen}/>
                 </div>
             );
         }

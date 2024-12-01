@@ -207,39 +207,39 @@ export default function CropManagementForm({ farm, setIsOpen }: {
         },
       });
       
-      function onSubmit(values: z.infer<typeof FormSchema>) {
-        toast.promise(
-          updateCropManagement({
-            cropManagement: {
-              fertilizerApplication: {
-                type: values.cropManagement?.fertilizerApplication.type || farm.cropManagement?.fertilizerApplication?.type || "",
-                quantity: values.cropManagement?.fertilizerApplication.quantity || farm.cropManagement?.fertilizerApplication?.quantity || 0,
-                applicationSchedule: values.cropManagement?.fertilizerApplication.applicationSchedule || farm.cropManagement?.fertilizerApplication?.applicationSchedule || "",
-              },
-              pestAndDiseaseControl: {
-                pests: values.cropManagement?.pestAndDiseaseControl.pests || farm.cropManagement?.pestAndDiseaseControl?.pests || [],
-                diseases: values.cropManagement?.pestAndDiseaseControl.diseases || farm.cropManagement?.pestAndDiseaseControl?.diseases || [],
-                controlMeasures: values.cropManagement?.pestAndDiseaseControl.controlMeasures || farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || [],
-              },
-              cropRotationPlan: {
-                schedule: values.cropManagement?.cropRotationPlan.schedule || farm.cropManagement?.cropRotationPlan?.schedule || "",
-              },
-              growthMonitoring: {
-                growthStage: values.cropManagement?.growthMonitoring.growthStage || farm.cropManagement?.growthMonitoring?.growthStage || "",
-                healthAssessments: values.cropManagement?.growthMonitoring.healthAssessments || farm.cropManagement?.growthMonitoring?.healthAssessments || [],
-              },
-              harvestingMethods: values.cropManagement?.harvestingMethods || farm.cropManagement?.harvestingMethods || "manual",
+    function onSubmit(values: z.infer<typeof FormSchema>) {
+    toast.promise(
+        updateCropManagement({
+        cropManagement: {
+            fertilizerApplication: {
+            type: values.cropManagement?.fertilizerApplication.type || farm.cropManagement?.fertilizerApplication?.type || "",
+            quantity: values.cropManagement?.fertilizerApplication.quantity || farm.cropManagement?.fertilizerApplication?.quantity || 0,
+            applicationSchedule: values.cropManagement?.fertilizerApplication.applicationSchedule || farm.cropManagement?.fertilizerApplication?.applicationSchedule || "",
             },
-            agriculturalPlotId: farm?._id, // Assuming farm._id is the correct identifier for the plot
-          }),
-          {
-            loading: "Updating farm information...",
-            success: "Farm updated successfully!",
-            error: "Failed to update farm information.",
-          }
-        );
-        setIsOpen(false)
-      }
+            pestAndDiseaseControl: {
+            pests: values.cropManagement?.pestAndDiseaseControl.pests || farm.cropManagement?.pestAndDiseaseControl?.pests || [],
+            diseases: values.cropManagement?.pestAndDiseaseControl.diseases || farm.cropManagement?.pestAndDiseaseControl?.diseases || [],
+            controlMeasures: values.cropManagement?.pestAndDiseaseControl.controlMeasures || farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || [],
+            },
+            cropRotationPlan: {
+            schedule: values.cropManagement?.cropRotationPlan.schedule || farm.cropManagement?.cropRotationPlan?.schedule || "",
+            },
+            growthMonitoring: {
+            growthStage: values.cropManagement?.growthMonitoring.growthStage || farm.cropManagement?.growthMonitoring?.growthStage || "",
+            healthAssessments: values.cropManagement?.growthMonitoring.healthAssessments || farm.cropManagement?.growthMonitoring?.healthAssessments || [],
+            },
+            harvestingMethods: values.cropManagement?.harvestingMethods || farm.cropManagement?.harvestingMethods || "manual",
+        },
+        agriculturalPlotId: farm?._id, // Assuming farm._id is the correct identifier for the plot
+        }),
+        {
+        loading: "Updating farm information...",
+        success: "Farm updated successfully!",
+        error: "Failed to update farm information.",
+        }
+    );
+    setIsOpen(false)
+    }
       
    
   return (
@@ -423,7 +423,7 @@ export default function CropManagementForm({ farm, setIsOpen }: {
                     )}
                 />
                 <div className='flex gap-x-10 justify-end col-span-2'>
-                    <Button variant={'destructive'} type="button" onClick={() => {}}>
+                    <Button variant={'destructive'} type="button" onClick={() => {setIsOpen(false)}}>
                         Cancel
                     </Button>
                     <Button type="submit" variant="default">

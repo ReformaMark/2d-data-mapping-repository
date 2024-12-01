@@ -82,7 +82,6 @@ export default function ProfilePage() {
                 error: 'Failed to update profile'
             }
         )
-
         setIsDialogOpen(false)
     }
 

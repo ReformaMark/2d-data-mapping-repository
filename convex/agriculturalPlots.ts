@@ -284,3 +284,90 @@ export const updateAgriculturalPlot = mutation({
         return args.agriculturalPlotId;
     }
 })
+
+export const updateSoilHealth = mutation({
+    args:{
+        agriculturalPlotId: v.id('agriculturalPlots'),
+        soilInfo: v.object({
+            type: v.string(), // Soil Type: Clay, loam, sandy, etc.
+            pH: v.number(), // Soil pH Level: Acidity or alkalinity of the soil.
+            texture: v.string(),
+            nutrientContent: v.object({ // Soil Nutrient Content: Levels of nitrogen (N), phosphorus (P), and potassium (K).
+                nitrogen: v.number(),
+                phosphorus: v.number(),
+                potassium: v.number(),
+            }),
+            moisture: v.object({ // Soil Moisture: Current and historical moisture levels.
+                current: v.number(),
+                historical: v.array(v.number()),
+            }),
+            erosionRisk: v.string(), // Soil Erosion Data: Risk of soil degradation or erosion.
+        }),
+    },
+    handler: async(ctx, args) =>{
+        const soilInfo = await ctx.db.patch(args.agriculturalPlotId, {
+            soilInfo: args.soilInfo,
+        });
+        return soilInfo;
+    }
+})
+
+export const updateIrrigation = mutation({
+    args:{
+        agriculturalPlotId: v.id('agriculturalPlots'),
+        waterSource: v.optional(v.string()), // Water Source: Irrigation, rain-fed, river, or well.
+        waterUsage: v.optional(v.number()), // Water Usage: Volume of water needed per crop cycle.
+        irrigationSystem: v.optional(v.string()), // Irrigation System: Type of irrigation system installed (e.g., drip, sprinkler, or flood).
+        rainfallData: v.optional(v.object({ // Rainfall Data: Seasonal rainfall patterns.
+            season: v.string(),
+            rainfallAmount: v.number(), // in millimeters
+        })),
+    },
+    handler: async(ctx, args) =>{
+        const irrigation = await ctx.db.patch(args.agriculturalPlotId, {
+            waterSource: args.waterSource,
+            waterUsage: args.waterUsage,
+            irrigationSystem: args.irrigationSystem,
+            rainfallData: args.rainfallData,
+        });
+
+        return irrigation;
+    }
+
+});
+
+export const updateFarmInfrastructure = mutation({
+    args:{
+        agriculturalPlotId: v.id('agriculturalPlots'),
+        farmInfrastructure: v.optional(v.object({
+            storageFacilities: v.array(v.string()), // Silos, warehouses, or cold storage for harvest
+            farmEquipment: v.array(v.string()), // Available machinery and tools
+            transportation: v.array(v.string()), // Methods for delivering crops to market
+        })),
+    },
+    handler: async (ctx, args) =>{
+        const farmInfrastructure = await ctx.db.patch(args.agriculturalPlotId, {
+            farmInfrastructure: args.farmInfrastructure,
+        });
+        return farmInfrastructure;
+    }
+})
+
+export const updateOwner = mutation({
+    args:{
+        agriculturalPlotId: v.id('agriculturalPlots'),
+        ownership: v.optional(v.object({
+            owner: v.object({
+                name: v.string(),
+                contact: v.string(),
+                role: v.string(), // Role in farm operations
+            })
+        })),
+    },
+    handler: async(ctx, args) => {
+        const ownership = await ctx.db.patch(args.agriculturalPlotId, {
+            ownership: args.ownership,
+        });
+        return ownership;
+    }
+})

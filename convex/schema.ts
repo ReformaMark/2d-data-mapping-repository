@@ -97,16 +97,7 @@ const schema = defineSchema({
                 name: v.string(),
                 contact: v.string(),
                 role: v.string(), // Role in farm operations
-            }),
-            laborForce: v.array(v.object({
-                workerName: v.string(),
-                role: v.string(), // Role of the worker
-            })),
-            legalDocuments: v.object({
-                landTitle: v.optional(v.string()),
-                waterPermits: v.optional(v.string()),
-                leaseAgreements: v.optional(v.string()),
-            }),
+            })
         })),
         cropManagement: v.optional(v.object({
             fertilizerApplication: v.object({
