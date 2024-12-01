@@ -41,7 +41,7 @@ interface MessengerTypes {
         senderId: Id<"users">;
         receiverId: Id<"users">;
         message: string;
-    };
+    } | null;
 }
 
 export default function MessagePage() {
@@ -51,43 +51,36 @@ export default function MessagePage() {
     const [selectedMessenger, setSelectedMessenger] = useState<MessengerTypes | null>(null)
     const [mes, setMes] = useState<Doc<'chats'>[] | null>(null)
     const messages = useMutation(api.chats.getMessages)
-    // const [searchValue, setSearchValue ] = useState('')
     const sendMessage = useMutation(api.chats.sendMessage)
     const [messageValue, setMessageValue] = useState('')
 
     const getMessages = useCallback(async () => {
-        if (selectedMessenger === null) {
-            if (sendMessageTo) {
-                const m = await messages({ senderId: sendMessageTo as Id<'users'> })
-                setMes(m)
-            } else {
-                setMes([])
-            }
+        const targetId = selectedMessenger?.id || (sendMessageTo ? sendMessageTo as Id<'users'> : null);
+        if (targetId) {
+            const m = await messages({ senderId: targetId });
+            setMes(m);
         } else {
-            const m = await messages({ senderId: selectedMessenger.id as Id<'users'> })
-            setMes(m)
+            setMes([]);
         }
     }, [selectedMessenger, sendMessageTo, messages])
 
-    // const filterUsers = users?.filter(u => u.lname.includes(searchValue) || u.fname.includes(searchValue) || `${u.fname} ${u.lname}`.includes(searchValue))
-    
     useEffect(() => {
         if (messengers && messengers.length > 0) {
-            setSelectedMessenger(messengers[0]);
+            const initialMessenger = sendMessageTo ? messengers.find(m => m?.id === sendMessageTo) : messengers[0];
+            setSelectedMessenger(initialMessenger || null);
         }
-    }, [messengers])
+    }, [messengers, sendMessageTo])
 
     useEffect(() => {
         getMessages()
     }, [getMessages, mes])
 
-    const handleSend = async() =>{
-
-        if(messageValue === "") {
+    const handleSend = async() => {
+        if (messageValue === "") {
             toast.error("Invalid message! Please Try again.")
             return
         }
-        if (selectedMessenger){
+        if (selectedMessenger) {
             toast.promise(sendMessage({
                 recieverId: selectedMessenger.id as Id<'users'>,
                 message: messageValue
@@ -96,14 +89,11 @@ export default function MessagePage() {
                 loading: 'Sending your message...',
                 success: "Message sent.",
                 error: "Unable to send your message."
-            }
-            )
-
+            })
             setMessageValue("")
         } else {
             toast.warning("Please select user first.")
         }
-       
     }
 
     if (!messengers) return <Loading />
@@ -121,7 +111,7 @@ export default function MessagePage() {
                                 </Avatar>
                                 <h1 className=' font-semibold '>{messenger?.senderUser?.fname} {messenger?.senderUser?.lname}</h1>
                             </div>
-                            <pre className='truncate text-xs text-gray-500'> Recent Message: {messenger?.latestMessage.message}</pre>
+                            <pre className='truncate text-xs text-gray-500'> Recent Message: {messenger?.latestMessage?.message}</pre>
                         </li>
                     )) : (
                         <h1>No messengers</h1>

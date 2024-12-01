@@ -216,7 +216,7 @@ export function AppSidebar({
       items: [
         {
           title: "Direct Messages",
-          url: "/stakeholder/message",
+          url: "/farmer/message",
         },
       ],
     },
