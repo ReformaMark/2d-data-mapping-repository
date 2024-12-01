@@ -5,6 +5,7 @@ import { ConvexClientProvider } from "@/components/convex-client-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
 import { withAuthMiddleware } from "@/features/auth/components/auth-middleware"
+import { RoleCheck } from "@/features/auth/components/role-check"
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -15,6 +16,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                         header="Admin Portal"
                         value="admin"
                     />
+                     <RoleCheck/>
                     <div className="flex-1 overflow-y-auto">
                         <div className="container mx-auto py-4 px-4 max-w-7xl pt-8">
                             {children}

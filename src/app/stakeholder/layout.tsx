@@ -5,9 +5,15 @@ import { ConvexClientProvider } from "@/components/convex-client-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { withAuthMiddleware } from "@/features/auth/components/auth-middleware";
+import { RoleCheck } from "@/features/auth/components/role-check";
 
 function StakeholdersLayout({ children }: { children: React.ReactNode }) {
+    const role = RoleCheck();
+    if(role){
     return (
+      
+
+       
         <ConvexClientProvider>
             <div className="flex flex-col h-screen">
                 <SidebarProvider>
@@ -15,6 +21,7 @@ function StakeholdersLayout({ children }: { children: React.ReactNode }) {
                         header="Stakeholder Portal"
                         value="stakeholder"
                     />
+                     <RoleCheck/>
                     <div className="block w-full overflow-y-auto p-4">
                         {children}
                     </div>
@@ -23,6 +30,7 @@ function StakeholdersLayout({ children }: { children: React.ReactNode }) {
             </div>
         </ConvexClientProvider>
     )
+    }
 }
 
 export default withAuthMiddleware(StakeholdersLayout)
