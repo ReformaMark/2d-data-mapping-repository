@@ -11,58 +11,82 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { useAuthActions } from "@convex-dev/auth/react"
 import { Loader2, TriangleAlertIcon } from "lucide-react"
-
+import ReCAPTCHA from "react-google-recaptcha"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { AuthFlow } from "../types"
-// import { useCheckRole } from "../api/use-check-role"
 
 interface SignInCardProps {
     setState: (state: AuthFlow) => void
 }
 
 export const SignInCard = ({ setState }: SignInCardProps) => {
-
     const { signIn } = useAuthActions();
-    // const { isAuthenticated } = useConvexAuth();
-
-    // const { data: role } = useRole()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pending, setPending] = useState<boolean>(false);
     const [error, setError] = useState("");
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
 
     const router = useRouter()
 
-    // useEffect(() => {
-    //     if (isAuthenticated) {
-    //         if (role === "admin") {
-    //             router.push("/admin");
-    //         } else {
-    //             router.push("/employee");
-    //         }
-    //     }
-    // }, [isAuthenticated, role, router]);
+    const onCaptchaChange = (token: string | null) => {
+        setCaptchaToken(token);
+    };
 
     const onSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setPending(true)
-        setError("")
+        e.preventDefault();
+        
+        if (pending) return;
+        
+        // Validate reCAPTCHA
+        if (!captchaToken) {
+            setError("Please complete the reCAPTCHA verification");
+            return;
+        }
+        
+        setPending(true);
+        setError("");
 
         try {
-            await signIn("password", {
+            const signInPromise = signIn("password", {
                 email,
                 password,
-                flow: "signIn"
+                flow: "signIn",
+                captchaToken, // Pass the token to your backend
             });
 
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error("Request timeout")), 10000);
+            });
+
+            await Promise.race([signInPromise, timeoutPromise]);
+            setError("");
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
         } catch (error) {
-            setError("Invalid email or password")
-            console.error(error)
+            console.error("Sign in error:", error);
+            
+            if (error instanceof Error) {
+                if (error.message.includes("Failed to fetch")) {
+                    setError("Connection error. Please check your internet connection and try again.");
+                } else if (error.message === "Request timeout") {
+                    setError("Request timed out. Please try again.");
+                } else {
+                    setError(error.message);
+                }
+            } else {
+                setError("Invalid email or password");
+            }
+            
+            // Reset reCAPTCHA on error
+            recaptchaRef.current?.reset();
+            setCaptchaToken(null);
         } finally {
-            setPending(false)
+            setPending(false);
         }
-    }
+    };
 
     return (
         <Card className="w-full h-full p-8">
@@ -98,11 +122,18 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                         type="password"
                         required
                     />
+                    <div className="flex justify-center my-4">
+                        <ReCAPTCHA
+                            ref={recaptchaRef}
+                            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                            onChange={onCaptchaChange}
+                        />
+                    </div>
                     <Button
                         type="submit"
                         className="w-full"
                         size={"lg"}
-                        disabled={pending}
+                        disabled={pending || !captchaToken}
                     >
                         {pending ? (
                             <>
