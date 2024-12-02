@@ -98,7 +98,7 @@ export default function MessagePage() {
 
     if (!messengers) return <Loading />
     return (
-        <div className="flex flex-col md:flex-row">
+        <div className=" mt-10 md:mt-0 flex flex-col md:flex-row">
             <aside className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
@@ -127,7 +127,7 @@ export default function MessagePage() {
                             {mes && mes.length > 0 ? (
                                 <div className='flex flex-col-reverse gap-y-3'>
                                     {mes.map((message, index) => (
-                                        <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-right bg-gray-300 rounded-md self-end'}`}>
+                                        <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-left bg-gray-300 rounded-md self-end'}`}>
                                             <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
                                             <p className='text-xs text-white text-right'>{formatDate({convexDate: message._creationTime})}</p>
                                         </div>
@@ -141,9 +141,9 @@ export default function MessagePage() {
                             <Textarea
                                 value={messageValue}
                                 onChange={(e) => setMessageValue(e.target.value)}
-                                className="col-span-10 border-green-200 bg-green-50 focus:ring-green-500"
+                                className="col-span-12 md:col-span-10 border-green-200 bg-green-50 focus:ring-green-500"
                             />
-                            <Button onClick={handleSend} className='col-span-2'>Send</Button>
+                            <Button onClick={handleSend} className='col-span-12 md:col-span-2'>Send</Button>
                         </div>
                     </div>
                 ) : (

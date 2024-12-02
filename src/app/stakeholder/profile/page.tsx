@@ -40,7 +40,6 @@ export default function ProfilePage() {
     const editUserProfile = useMutation(api.users.editUserProfile)
     const [dialogOpen, setIsDialogOpen] = useState(false)
     
-   
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -58,9 +57,10 @@ export default function ProfilePage() {
         },
       })
 
-      if (isLoading) {
+    if (isLoading) {
         return <Loading />
     } 
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         toast.promise(
             editUserProfile({
@@ -86,12 +86,12 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="grid  grid-cols-1 gap-x-10 auto-rows-fr">
-            <div className="p-4 bg-white shadow-md rounded-lg">
+        <div className="grid grid-cols-1 gap-4 auto-rows-fr p-4">
+            <div className="bg-white shadow-md rounded-lg">
                 <h1 className="text-2xl font-bold mb-4 text-center">My Profile</h1>
                 <Card className="border border-gray-200 space-y-10">
-                    <CardHeader className="bg-gray-100 ">
-                        <div className="px-10 flex justify-between">
+                    <CardHeader className="bg-gray-100">
+                        <div className="flex flex-col md:flex-row justify-between items-center px-4">
                             <CardTitle className="text-lg font-semibold flex gap-x-5 items-center">
                                 <Avatar className="size-10">
                                     <AvatarImage src={data?.image} />
@@ -103,7 +103,7 @@ export default function ProfilePage() {
                             </CardTitle>
                             <Dialog onOpenChange={setIsDialogOpen} open={dialogOpen}>
                                 <DialogTrigger>
-                                    <Button onClick={()=> setIsDialogOpen(true)} variant={'default'} className='bg-blue-500 hover:bg-blue-700'>Update Profile</Button>
+                                    <Button onClick={() => setIsDialogOpen(true)} variant={'default'} className='bg-blue-500 hover:bg-blue-700'>Update Profile</Button>
                                 </DialogTrigger>
                                 <DialogContent>
                                     <DialogTitle>Edit Profile</DialogTitle>
@@ -111,7 +111,7 @@ export default function ProfilePage() {
                                         <CardContent className="space-y-2">
                                             <Form {...form}>
                                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                         <FormField
                                                             control={form.control}
                                                             name="fname"
@@ -139,7 +139,7 @@ export default function ProfilePage() {
                                                             )}
                                                         />
                                                     </div>
-                                                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-5">
+                                                    <div className="grid grid-cols-1 gap-5">
                                                         {data?.stakeholderProfile && (
                                                             <FormField
                                                                 control={form.control}
@@ -188,7 +188,6 @@ export default function ProfilePage() {
                                                     </div>
                                                     <div className="flex justify-end">
                                                         <Button type="submit">Save Changes</Button>
-
                                                     </div>
                                                 </form>
                                             </Form>
@@ -199,12 +198,9 @@ export default function ProfilePage() {
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-5">
-                        <div className='grid grid-cols-2'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                             <p className="font-semibold">First Name: <span className='font-medium'>{data?.fname}</span></p>
                             <p className="font-semibold">Last Name: <span className='font-medium'>{data?.lname}</span></p>
-                        </div>
-                        <div>
-                           
                         </div>
                         {data?.stakeholderProfile && (
                             <div>
@@ -226,10 +222,6 @@ export default function ProfilePage() {
                         <p><span className="font-semibold">Member since:</span> {formatDate({convexDate: data?._creationTime || 0})}</p>
                     </CardFooter>
                 </Card>
-            </div>
-            <div>
-            
-           
             </div>
         </div>
     )
