@@ -96,13 +96,12 @@ export default function MessagePage() {
         }
     }
 
-    if (!messengers) return <Loading />
     return (
-        <div className="z-[10] mt-10 md:mt-0 flex flex-col md:flex-row">
-            <div className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
+        <div className="  z-10 mt-10 md:mt-0 flex flex-col md:flex-row">
+            <div className="w-full  md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
-                    {messengers.length > 0 ? messengers.map((messenger, index) => (
+                    {messengers && messengers?.length > 0 ? messengers?.map((messenger, index) => (
                         <li key={index} className="cursor-pointer p-2 space-y-2 bg-white hover:bg-gray-200 rounded-md" onClick={() => setSelectedMessenger(messenger)}>
                             <div className="flex gap-x-3 items-center">
                                 <Avatar>
