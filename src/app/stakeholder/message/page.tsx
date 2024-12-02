@@ -123,9 +123,9 @@ export default function MessagePage() {
                 {selectedMessenger ? (
                     <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
-                        <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 overflow-y-auto">
+                        <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 ">
                             {mes && mes.length > 0 ? (
-                                <div className='flex flex-col-reverse gap-y-3'>
+                                <div className='flex flex-col-reverse gap-y-3 overflow-y-scroll'>
                                     {mes.map((message, index) => (
                                         <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-left bg-gray-300 rounded-md self-end'}`}>
                                             <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
@@ -137,7 +137,7 @@ export default function MessagePage() {
                                 <h1>No messages</h1>
                             )}
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-5 gap-y-5 items-center">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-5 items-center">
                             <Textarea
                                 value={messageValue}
                                 onChange={(e) => setMessageValue(e.target.value)}

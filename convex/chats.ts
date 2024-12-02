@@ -13,12 +13,11 @@ export const getMessengers = query({
             .collect();
 
         const uniqueMessengers = Array.from(new Set(messages.map(m => m.senderId)));
-       
 
         const latestMessages = await Promise.all(uniqueMessengers.map(async (id) => {
             const senderUser = await ctx.db.get(id)
-            const latestMessage = await ctx.db.query('chats').filter(q=> q.eq(q.field('senderId'), id)).first()
-     
+            const latestMessage = await ctx.db.query('chats').filter(q=> q.eq(q.field('senderId'), id)).order('desc').first()
+
             return { id, senderUser, latestMessage };
         }));
         
