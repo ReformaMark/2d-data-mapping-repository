@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Doc, Id } from '../../../../convex/_generated/dataModel'
 import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useSearchParams } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -44,6 +45,8 @@ interface MessengerTypes {
 }
 
 export default function MessagePage() {
+    const searchParams = useSearchParams()
+    const sendMessageTo = searchParams.get('sendMessageTo')
     const messengers = useQuery(api.chats.getMessengers)
     const [selectedMessenger, setSelectedMessenger] = useState<MessengerTypes | null>(null)
     const [mes, setMes] = useState<Doc<'chats'>[] | null>(null)
@@ -52,25 +55,25 @@ export default function MessagePage() {
     const [messageValue, setMessageValue] = useState('')
 
     const getMessages = useCallback(async () => {
-        if (selectedMessenger) {
-            const m = await messages({ senderId: selectedMessenger.id as Id<'users'> })
-            setMes(m)
+        const targetId = selectedMessenger?.id || (sendMessageTo ? sendMessageTo as Id<'users'> : null);
+        if (targetId) {
+            const m = await messages({ senderId: targetId });
+            setMes(m);
         } else {
-            setMes([])
+            setMes([]);
         }
-    }, [selectedMessenger, messages])
+    }, [selectedMessenger, sendMessageTo, messages])
 
     useEffect(() => {
-        if (messengers?.length) {
-            setSelectedMessenger(messengers[0]);
+        if (messengers && messengers.length > 0) {
+            const initialMessenger = sendMessageTo ? messengers.find(m => m?.id === sendMessageTo) : messengers[0];
+            setSelectedMessenger(initialMessenger || null);
         }
-    }, [messengers]);
+    }, [messengers, sendMessageTo])
 
     useEffect(() => {
-        if (selectedMessenger) {
-            getMessages()
-        }
-    }, [selectedMessenger, getMessages])
+        getMessages()
+    }, [getMessages, mes])
 
     const handleSend = async() => {
         if (messageValue === "") {
@@ -95,37 +98,37 @@ export default function MessagePage() {
 
     if (!messengers) return <Loading />
     return (
-        <div className="flex">
-            <aside className="w-1/4 p-10 bg-gray-100">
+        <div className="flex flex-col md:flex-row">
+            <aside className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
                     {messengers.length > 0 ? messengers.map((messenger, index) => (
                         <li key={index} className="cursor-pointer p-2 space-y-2 bg-white hover:bg-gray-200 rounded-md" onClick={() => setSelectedMessenger(messenger)}>
-                            <div className="flex gap-x-5 items-center">
+                            <div className="flex gap-x-3 items-center">
                                 <Avatar>
                                     <AvatarImage src={messenger?.senderUser?.image} alt={messenger?.senderUser?.lname} />
                                     <AvatarFallback>{messenger?.senderUser?.fname?.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <h1 className='font-semibold'>{messenger?.senderUser?.fname} {messenger?.senderUser?.lname}</h1>
                             </div>
-                            <pre className='truncate text-xs text-gray-500'> Recent Message: {messenger?.latestMessage?.message}</pre>
+                            <pre className='truncate text-xs text-gray-500'>Recent Message: {messenger?.latestMessage?.message}</pre>
                         </li>
                     )) : (
                         <h1>No messengers</h1>
                     )}
                 </ul>
             </aside>
-            <Separator orientation="vertical" className="mx-4" />
-            <main className="w-3/4 p-4 h-screen bg-white">
+            <Separator orientation="vertical" className="mx-4 hidden md:block" />
+            <main className="w-full md:w-3/4 p-4 h-screen bg-white">
                 {selectedMessenger ? (
-                    <div className='p-10 space-y-10'>
+                    <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
-                        <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] gap-x-10 bg-gray-100">
+                        <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 overflow-y-auto">
                             {mes && mes.length > 0 ? (
-                                <div className='flex flex-col-reverse overflow-y-auto gap-y-3'>
+                                <div className='flex flex-col-reverse gap-y-3'>
                                     {mes.map((message, index) => (
-                                        <div key={index} className={`p-2 w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-right bg-gray-300 rounded-md self-end'}`}>
-                                            <pre>{message.message}</pre>
+                                        <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-right bg-gray-300 rounded-md self-end'}`}>
+                                            <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
                                             <p className='text-xs text-white text-right'>{formatDate({convexDate: message._creationTime})}</p>
                                         </div>
                                     ))}
@@ -134,7 +137,7 @@ export default function MessagePage() {
                                 <h1>No messages</h1>
                             )}
                         </div>
-                        <div className="grid grid-cols-12 gap-x-5 items-center">
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-5 items-center">
                             <Textarea
                                 value={messageValue}
                                 onChange={(e) => setMessageValue(e.target.value)}

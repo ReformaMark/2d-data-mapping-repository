@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { LayersControl, MapContainer, Polygon, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useMutation, useQuery } from 'convex/react';
+import {  useQuery } from 'convex/react';
 import { Button } from '@/components/ui/button';
 import { api } from '../../../../convex/_generated/api';
 import L from 'leaflet';
@@ -18,16 +18,6 @@ import { AddFarmDialog } from './add-farm-dialog';
 import { useCurrentUser } from '@/features/users/api/use-current-user';
 import { Badge } from '@/components/ui/badge';
 import { formatDateToMonthYear } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Id } from '../../../../convex/_generated/dataModel';
-import { toast } from 'sonner';
 import Image from 'next/image';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -37,30 +27,30 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-const FormSchema = z.object({
-    farmName: z.string().min(2, {
-      message: "Farm name must be at least 2 characters.",
-    }),
-    markerType: z.string().nonempty({
-      message: "Please select a crop type.",
-    }),
-    area: z.coerce.number().positive({
-      message: "Area must be a positive number.",
-    }),
-    status: z.string().nonempty({
-      message: "Please select a status.",
-    }),
-    plantingDate: z.string().nonempty({
-      message: "Please provide a planting date.",
-    }),
-    harvestDate: z.string().optional(),
-    yields: z.coerce.number().positive({
-      message: "Yield must be a positive number.",
-    }),
-    landUseType: z.array(z.string()).nonempty({
-      message: "Please select at least one land use type.",
-    }),
-  })
+// const FormSchema = z.object({
+//     farmName: z.string().min(2, {
+//       message: "Farm name must be at least 2 characters.",
+//     }),
+//     markerType: z.string().nonempty({
+//       message: "Please select a crop type.",
+//     }),
+//     area: z.coerce.number().positive({
+//       message: "Area must be a positive number.",
+//     }),
+//     status: z.string().nonempty({
+//       message: "Please select a status.",
+//     }),
+//     plantingDate: z.string().nonempty({
+//       message: "Please provide a planting date.",
+//     }),
+//     harvestDate: z.string().optional(),
+//     yields: z.coerce.number().positive({
+//       message: "Yield must be a positive number.",
+//     }),
+//     landUseType: z.array(z.string()).nonempty({
+//       message: "Please select at least one land use type.",
+//     }),
+//   })
 
 export function FarmerMap() {
   const barangay = useQuery(api.barangays.getBarangay);
@@ -75,10 +65,8 @@ export function FarmerMap() {
   const [markerType, setMarkerType] = useState('corn');
   const [isAddingMarker, setIsAddingMarker] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const mapMarkers = useQuery(api.mapMarkers.getMapMarkers);
-  const [editMarkerId, setEditMarkerId] = useState('');
   const userId = useCurrentUser();
 
   const center: [number, number] = [15.25, 120.71]; // Centered between Barangay Turu, Mapinya, and Balitucan
@@ -102,19 +90,19 @@ export function FarmerMap() {
     return isInside;
   }
 
-  const formMethods = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      farmName: mapMarkers?.find(marker => marker._id === editMarkerId)?.title || '',
-      markerType: mapMarkers?.find(marker => marker._id === editMarkerId)?.markerType || '',
-      area: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.area || 0,
-      status: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.status || '',
-      plantingDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.plantingDate || '',
-      harvestDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.harvestDate || '',
-      yields: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.possibleYields || 0,
-      landUseType: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.landUseType || [],
-    },
-  });
+  // const formMethods = useForm<z.infer<typeof FormSchema>>({
+  //   resolver: zodResolver(FormSchema),
+  //   defaultValues: {
+  //     farmName: mapMarkers?.find(marker => marker._id === editMarkerId)?.title || '',
+  //     markerType: mapMarkers?.find(marker => marker._id === editMarkerId)?.markerType || '',
+  //     area: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.area || 0,
+  //     status: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.status || '',
+  //     plantingDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.plantingDate || '',
+  //     harvestDate: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.harvestDate || '',
+  //     yields: crops?.find(crop => crop.plotId === agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id)?.possibleYields || 0,
+  //     landUseType: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?.landUseType || [],
+  //   },
+  // });
 
   function LocationSelector() {
     useMapEvents({
@@ -133,45 +121,45 @@ export function FarmerMap() {
     return null;
   }
 
-  const updateMarker = useMutation(api.mapMarkers.updateMapMarker);
-  const updateAgriculturalPlot = useMutation(api.agriculturalPlots.updateAgriculturalPlot);
-  const updateCrop = useMutation(api.crops.updateCrop);
+  // const updateMarker = useMutation(api.mapMarkers.updateMapMarker);
+  // const updateAgriculturalPlot = useMutation(api.agriculturalPlots.updateAgriculturalPlot);
+  // const updateCrop = useMutation(api.crops.updateCrop);
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    if (selectedLocation) {
-      try {
-        // add Marker to mapMarkers Table
-        await updateMarker({ 
-          markerId: editMarkerId as Id<"mapMarkers">,
-          title: data.farmName, 
-          markerType: data.markerType,
-        });
-        // Add agricultural plot
-        const plotId = await updateAgriculturalPlot({
-            agriculturalPlotId: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id ?? 
-                (() => { throw new Error("Agricultural plot not found") })(),
-            area: data.area,
-            status: data.status,
-            landUseType: data.landUseType,
-        });
-        // Add crop
-        await updateCrop({
-            cropId: crops?.find(crop => crop.plotId === plotId)?._id ?? 
-                (() => { throw new Error("Crop not found") })(),
-            name: data.markerType,
-        });
+  // const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  //   if (selectedLocation) {
+  //     try {
+  //       // add Marker to mapMarkers Table
+  //       await updateMarker({ 
+  //         markerId: editMarkerId as Id<"mapMarkers">,
+  //         title: data.farmName, 
+  //         markerType: data.markerType,
+  //       });
+  //       // Add agricultural plot
+  //       const plotId = await updateAgriculturalPlot({
+  //           agriculturalPlotId: agriculturalPlot?.find(plot => plot.markerId === editMarkerId)?._id ?? 
+  //               (() => { throw new Error("Agricultural plot not found") })(),
+  //           area: data.area,
+  //           status: data.status,
+  //           landUseType: data.landUseType,
+  //       });
+  //       // Add crop
+  //       await updateCrop({
+  //           cropId: crops?.find(crop => crop.plotId === plotId)?._id ?? 
+  //               (() => { throw new Error("Crop not found") })(),
+  //           name: data.markerType,
+  //       });
        
-        formMethods.reset();
-        handleCancel();
-        toast.success('Farm updated successfully');
-         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        setErrorMessage('An error occurred while saving the data.');
-      }
-    } else {
-      setErrorMessage('Please select a location.');
-    }
-  };
+  //       formMethods.reset();
+  //       handleCancel();
+  //       toast.success('Farm updated successfully');
+  //        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //     } catch (error) {
+  //       setErrorMessage('An error occurred while saving the data.');
+  //     }
+  //   } else {
+  //     setErrorMessage('Please select a location.');
+  //   }
+  // };
 
   const handleCancel = () => {
     setSelectedLocation(null);
@@ -185,9 +173,9 @@ export function FarmerMap() {
     setIsAddingMarker(true);
   };
 
-  const handleCancelDialog = () => {
-    setIsEditDialogOpen(false);
-  };
+  // const handleCancelDialog = () => {
+  //   setIsEditDialogOpen(false);
+  // };
 
   const userHasLocation = mapMarkers?.some(marker => marker.userId === userId?.data?._id);
 

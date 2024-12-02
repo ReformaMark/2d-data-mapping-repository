@@ -17,11 +17,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { Id } from '../../../../convex/_generated/dataModel'
-import {  FormControl, FormField, FormLabel, FormItem, FormMessage, Form } from '@/components/ui/form'
+import { FormControl, FormField, FormLabel, FormItem, FormMessage, Form } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import CropManagementForm, { FarmTypes } from './crop-management-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -37,19 +37,19 @@ export default function MyFarm() {
 
     return (
         <article className="p-4 w-full bg-white rounded-md shadow-md"> 
-            <header className="bg-gray-100 p-6 flex justify-between items-center">
+            <header className="bg-gray-100 p-6 flex flex-col md:flex-row justify-between items-center">
                 <h1 className="text-3xl font-bold flex gap-x-10 uppercase">
                     <Mountain className='text-green' color='green'/> {farm.mapMarker?.title}
                 </h1>
             </header>
             <section className="p-6 space-y-6">
-                <div className="col-span-2 flex justify-end">
+                <div className="flex justify-end">
                     <DialogSection title="Farm information" content='main'/>
                 </div>
-                <div className="grid grid-cols-2 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <h2 className="text-xl font-semibold">Current Crops</h2>
-                        <div className="flex space-x-4 mt-2">
+                        <div className="flex flex-wrap space-x-4 mt-2">
                             {farm.cropHistory.map((crop, index) => (
                                 <div key={index} className="flex items-center space-x-2 capitalize">
                                     {crop?.name === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="w-8 h-8" />}
@@ -64,7 +64,7 @@ export default function MyFarm() {
                     </div>
                     <div>
                         <h2 className="text-xl font-semibold">Potential Crops</h2>
-                        <div className="flex space-x-4 mt-2">
+                        <div className="flex flex-wrap space-x-4 mt-2">
                             {farm.landUseType.map((type, index) => (
                                 <div key={index} className="flex items-center space-x-2 capitalize">
                                     {type === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="w-8 h-8" />}
@@ -80,7 +80,7 @@ export default function MyFarm() {
                 </div>
                 <div className='w-full'>
                     <h2 className="text-xl font-semibold">Farm Details</h2>
-                    <div className="grid grid-cols-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <p className="mt-2"><span className="font-semibold">Area:</span> <span className="font-normal">{farm.area} hectares</span></p>
                         <p><span className="font-semibold">Possible Yields:</span> <span className="font-normal">{farm.mapMarker?.yields} tons</span></p>
                         <p><span className="font-semibold">Status:</span> <Badge className="ml-1">{farm.status}</Badge></p>
@@ -214,7 +214,7 @@ export default function MyFarm() {
                     )}
                 </div>
                 <Separator className='my-5'/>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-6">
                         <div className='flex justify-between items-center'>
                             <h2 className="text-2xl font-semibold text-gray-800">Soil Information</h2>
@@ -284,7 +284,6 @@ export default function MyFarm() {
         </article>
     )
 }
-
 
 const FormSchema = z.object({
     area: z.coerce.number().default(0).refine(value => value >= 0, {

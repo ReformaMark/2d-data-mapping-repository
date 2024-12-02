@@ -22,12 +22,12 @@ export default function Announcement() {
                 <h3 className='absolute top-[-10px] left-3 p-1 font-semibold text-white rounded-md bg-green-500'>Announcements</h3>
                 {announcements && announcements.length > 0 ? (
                     announcements.slice(0, 5).map((announcement) => (
-                        <Link href={`/stakeholder/farms/${announcement.additionalInformation}`} key={announcement._id} className="mb-4 p-2 hover:bg-gray-50 flex justify-between items-center">
+                        <Link href={`/stakeholder/farms/${announcement.additionalInformation}`} key={announcement._id} className="mb-4 p-2 hover:bg-gray-50 ">
                             <div className="">
                                 <h3 className="text-lg font-semibold">{announcement.title}</h3>
-                                <p>{announcement.content}</p>
+                                <p className='text-sm'>{announcement.content}</p>
                             </div>
-                            <div className="">
+                            <div className="text-xs flex flex-col justify-end items-end">
                                 <h3>{formatDate({convexDate: announcement._creationTime})}</h3>
                             </div>
                         </Link>
@@ -45,12 +45,12 @@ export default function Announcement() {
                 <h3 className='absolute top-[-10px] left-3 p-1 font-semibold text-white rounded-md bg-green-500'>Recent Activities</h3>
                 {activities && activities.length > 0 ? (
                     activities.slice(0, 5).map((activity) => (
-                        <Link href={"/stakeholder/farms"} key={activity._id} className="mb-4 p-2 hover:bg-gray-50 flex justify-between items-center">
+                        <Link href={"/stakeholder/farms"} key={activity._id}  className="mb-4 p-2 hover:bg-gray-50 flex justify-between items-center">
                             <div className="">
                                 <h3 className="text-lg font-semibold">{activity.title}</h3>
                                 <p>{activity.content}</p>
                             </div>
-                            <div className="">
+                            <div className="flex">
                                 <h3>{formatDate({convexDate: activity._creationTime})}</h3>
                             </div>
                         </Link>

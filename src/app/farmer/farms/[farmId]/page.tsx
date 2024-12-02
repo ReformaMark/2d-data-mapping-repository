@@ -52,9 +52,9 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
     if (!farm) return <Loading/>
 
     return (
-        <article className="p-4  w-full bg-white rounded-md shadow-md"> 
-            <header className="bg-gray-100 p-6 flex justify-between items-center">
-                <h1 className="text-3xl font-bold flex gap-x-10 uppercase"><Mountain className='text-green' color='green'/> {farm.mapMarker?.title}</h1>
+        <article className="p-4 w-full bg-white rounded-md shadow-md"> 
+            <header className="bg-gray-100 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center">
+                <h1 className="text-2xl md:text-3xl font-bold flex gap-x-2 md:gap-x-10 uppercase"><Mountain className='text-green' color='green'/> {farm.mapMarker?.title}</h1>
                 {user?.data?._id !== farm.userId && (
                      <Dialog open={open} onOpenChange={setOpen}>
                      <DialogTrigger onClick={()=>setOpen(!open)} className='flex flex-col items-center justify-center hover:text-green-500 transition-colors duration-300 ease-in'>
@@ -82,14 +82,13 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                  </Dialog>
                 )}
             </header>
-            <section className="p-6 space-y-6">
-                <div className="col-span-2 flex justify-end">
-             
+            <section className="p-4 md:p-6 space-y-6">
+                <div className="flex justify-end">
                 </div>
-                <div className="grid grid-cols-2 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-4">
                     <div>
                         <h2 className="text-xl font-semibold">Current Crops</h2>
-                        <div className="flex space-x-4 mt-2">
+                        <div className="flex flex-wrap space-x-4 mt-2">
                             {farm.cropHistory.map((crop, index) => (
                                 <div key={index} className="flex items-center space-x-2 capitalize">
                                     {crop?.name === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="w-8 h-8" />}
@@ -104,7 +103,7 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                     </div>
                     <div>
                         <h2 className="text-xl font-semibold">Potential Crops</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4 mt-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
                             {farm.landUseType.map((type, index) => (
                                 <div key={index} className="flex items-center space-x-2 capitalize">
                                     {type === 'corn' && <Image height={200} width={200} src={corn.src} alt="Corn" className="w-8 h-8" />}
@@ -120,7 +119,7 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                 </div>
                 <div className='w-full'>
                     <h2 className="text-xl font-semibold">Farm Details</h2>
-                    <div className="grid grid-cols-3">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <p className="mt-2"><span className="font-semibold">Area:</span> <span className="font-normal">{farm.area} hectares</span></p>
                         <p><span className="font-semibold">Possible Yields:</span> <span className="font-normal">{farm.mapMarker?.yields} tons</span></p>
                         <p><span className="font-semibold">Status:</span> <Badge className="ml-1">{farm.status}</Badge></p>
@@ -128,11 +127,10 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                 </div>
             </section>
             <Separator className='my-5'/>
-            <section className="p-6 space-y-6">
+            <section className="p-4 md:p-6 space-y-6">
                 <div>
                     <div className='flex justify-between'>
                         <h2 className="text-xl font-semibold">Crop Management</h2>
-                       
                     </div>
                     {farm.cropManagement ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -166,11 +164,9 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Pests:</span>
                           {farm.cropManagement.pestAndDiseaseControl.pests ? (
-                            
                               <Badge className="">
                                 {farm.cropManagement.pestAndDiseaseControl.pests}
                               </Badge>
-                            
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
@@ -178,11 +174,9 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Diseases:</span>
                           {farm.cropManagement.pestAndDiseaseControl.diseases ? (
-                          
                               <Badge className="bg-red-100 text-red-700">
                                 {farm.cropManagement.pestAndDiseaseControl.diseases}
                               </Badge>
-                          
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
@@ -190,11 +184,9 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Control Measures:</span>
                           {farm.cropManagement.pestAndDiseaseControl.controlMeasures?.length ? (
-                            
-                              <Badge  className="bg-blue-100 text-blue-700">
+                              <Badge className="bg-blue-100 text-blue-700">
                                 {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
                               </Badge>
-                            
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
@@ -227,11 +219,9 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Health Assessments:</span>
                           {farm.cropManagement.pestAndDiseaseControl.controlMeasures ? (
-                          
                               <Badge className="bg-yellow-100 text-yellow-700">
                                 {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
                               </Badge>
-                          
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
@@ -251,18 +241,15 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                       </CardContent>
                     </Card>
                   </div>
-                  
-                     
                     ) : (
                         <p>The owner or the farmer has not yet provided crop management information.</p>
                     )}
                 </div>
                 <Separator className='my-5'/>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-6">
                         <div className='flex justify-between items-center'>
                             <h2 className="text-2xl font-semibold text-gray-800">Soil Information</h2>
-                           
                         </div>
                         {farm.soilInfo ? (
                             <div className="space-y-2 text-gray-700">
@@ -280,7 +267,6 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                     <div className="space-y-6">
                         <div className='flex justify-between items-center'>
                             <h2 className="text-2xl font-semibold text-gray-800">Irrigation</h2>
-                           
                         </div>
                         {farm.irrigationSystem ? (
                             <div className="space-y-2 text-gray-700">
@@ -296,7 +282,6 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                     <div className="space-y-6">
                         <div className='flex justify-between items-center'>
                             <h2 className="text-2xl font-semibold text-gray-800">Farm Infrastructure</h2>
-                           
                         </div>
                         {farm.farmInfrastructure ? (
                             <div className="space-y-2 text-gray-700">
@@ -311,7 +296,6 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                     <div className="space-y-6">
                         <div className='flex justify-between items-center'>
                             <h2 className="text-2xl font-semibold text-gray-800">Owner Information</h2>
-                          
                         </div>
                         {farm.ownership?.owner ? (
                             <div className="space-y-2 text-gray-700">
