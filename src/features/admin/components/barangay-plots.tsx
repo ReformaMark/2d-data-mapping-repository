@@ -1,9 +1,10 @@
 "use client"
 
-import { useQuery } from "convex/react"
-import { useRouter } from "next/navigation"
-import { api } from "../../../../convex/_generated/api"
-import { MapIcon, Eye, TableIcon } from "lucide-react"
+import Loading from "@/components/loading"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Table,
     TableBody,
@@ -12,13 +13,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
+import { useQuery } from "convex/react"
+import { MapIcon, TableIcon } from "lucide-react"
 import dynamic from "next/dynamic"
-import Loading from "@/components/loading"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Card } from "@/components/ui/card"
+import { useState } from "react"
+import { api } from "../../../../convex/_generated/api"
+import { Id } from "../../../../convex/_generated/dataModel"
 
 const Map = dynamic(() => import("@/features/barangays/components/map"), {
     ssr: false,
@@ -29,19 +29,28 @@ interface BarangayPlotsProps {
     barangayName: "Turu" | "Balitucan" | "Mapinya"
 }
 
+interface PlotWithDetails {
+    _id: Id<"agriculturalPlots">;
+    area: number;
+    status: string;
+    currentCrop: string | null;
+    yields: number;
+    farmerName: string;
+    landUseType: string[];
+}
+
 export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
-    const router = useRouter()
     const [viewMode, setViewMode] = useState<"table" | "map">("table")
     const plots = useQuery(api.admin.getBarangayPlots, {
         name: barangayName      
-    })
+    }) as PlotWithDetails[] | undefined
 
     if (!plots) return <Loading/>
 
     const statusColors = {
-        active: "default",
+        active: "success",
         fallow: "destructive",
-        preparing: "outline"
+        preparing: "secondary"
     } as const
 
     return (
@@ -79,7 +88,7 @@ export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
                                     <TableHead className="min-w-[100px]">Status</TableHead>
                                     <TableHead className="min-w-[120px]">Current Crop</TableHead>
                                     <TableHead className="min-w-[150px]">Farmer</TableHead>
-                                    <TableHead className="text-right min-w-[80px]">Actions</TableHead>
+                                    {/* <TableHead className="text-right min-w-[80px]">Actions</TableHead> */}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -92,7 +101,11 @@ export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
                                 ) : (
                                     plots.map((plot) => (
                                         <TableRow key={plot._id}>
-                                            <TableCell className="font-medium">{plot.landUseType}</TableCell>
+                                            <TableCell className="font-medium">
+                                                {plot.landUseType.map((type: string) => 
+                                                    type.charAt(0).toUpperCase() + type.slice(1)
+                                                ).join(", ")}
+                                            </TableCell>
                                             <TableCell>{plot.area.toFixed(2)}</TableCell>
                                             <TableCell>
                                                 <Badge variant={statusColors[plot.status as keyof typeof statusColors]}>
@@ -101,7 +114,7 @@ export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
                                             </TableCell>
                                             <TableCell>{plot.currentCrop || "None"}</TableCell>
                                             <TableCell>{plot.farmerName}</TableCell>
-                                            <TableCell className="text-right">
+                                            {/* <TableCell className="text-right">
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -109,7 +122,7 @@ export const BarangayPlots = ({ barangayName }: BarangayPlotsProps) => {
                                                 >
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     ))
                                 )}

@@ -19,7 +19,7 @@ export const addAgriculturalPlot = mutation({
         const user = await ctx.db.get(userId);
         if (!user) throw new Error("User not found");
         if (!user.farmerProfile) throw new Error("User does not have a farmer profile");
-        
+
         const agriculturalPlot = await ctx.db.insert("agriculturalPlots", {
             userId: userId,
             barangayId: user.farmerProfile.barangayId,
@@ -87,7 +87,7 @@ export const getAgriculturalPlot = query({
     handler: async (ctx) => {
         const userId = await getAuthUserId(ctx);
         if (!userId) throw new Error("User not authenticated");
-       
+
         const agriculturalPlot = await ctx.db.query("agriculturalPlots").collect();
         if (!agriculturalPlot) throw new Error("Agricultural plot not found");
         return agriculturalPlot;
@@ -136,11 +136,12 @@ export const getFarmById = query({
             cropHistory: cropHistory.filter(crop => crop !== null),
             user
         };
-    }});
+    }
+});
 
-    
+
 export const getFarmByUserId = query({
-  
+
     handler: async (ctx) => {
         const userId = await getAuthUserId(ctx)
         if (userId === null) return;
@@ -167,7 +168,8 @@ export const getFarmByUserId = query({
             cropHistory: cropHistory.filter(crop => crop !== null),
             user
         };
-    }});
+    }
+});
 
 export const addCropManagement = mutation({
     args: {
@@ -203,7 +205,7 @@ export const addCropManagement = mutation({
 
 
 export const updateFarmInfo = mutation({
-    args:{
+    args: {
         plotId: v.id('agriculturalPlots'),
         markerId: v.id('mapMarkers'),
         cropId: v.id("crops"),
@@ -215,23 +217,23 @@ export const updateFarmInfo = mutation({
         farmName: v.string()
     },
 
-    handler: async(ctx, args) =>{
+    handler: async (ctx, args) => {
         await ctx.db.patch(args.plotId, {
             area: args.area,
             status: args.status,
             landUseType: args.landUseType,
         });
-        await ctx.db.patch(args.markerId,{
+        await ctx.db.patch(args.markerId, {
             title: args.farmName,
             yields: args.possibleYields,
             markerType: args.cropName
         });
 
-        await ctx.db.patch(args.cropId,{
+        await ctx.db.patch(args.cropId, {
             possibleYields: args.possibleYields,
             name: args.cropName
         })
-    }   
+    }
 
 })
 
@@ -276,7 +278,7 @@ export const updateAgriculturalPlot = mutation({
         status: v.string(),
     },
     handler: async (ctx, args) => {
-      await ctx.db.patch(args.agriculturalPlotId, {
+        await ctx.db.patch(args.agriculturalPlotId, {
             area: args.area,
             landUseType: args.landUseType,
             status: args.status,
@@ -286,7 +288,7 @@ export const updateAgriculturalPlot = mutation({
 })
 
 export const updateSoilHealth = mutation({
-    args:{
+    args: {
         agriculturalPlotId: v.id('agriculturalPlots'),
         soilInfo: v.object({
             type: v.string(), // Soil Type: Clay, loam, sandy, etc.
@@ -304,7 +306,7 @@ export const updateSoilHealth = mutation({
             erosionRisk: v.string(), // Soil Erosion Data: Risk of soil degradation or erosion.
         }),
     },
-    handler: async(ctx, args) =>{
+    handler: async (ctx, args) => {
         const soilInfo = await ctx.db.patch(args.agriculturalPlotId, {
             soilInfo: args.soilInfo,
         });
@@ -313,7 +315,7 @@ export const updateSoilHealth = mutation({
 })
 
 export const updateIrrigation = mutation({
-    args:{
+    args: {
         agriculturalPlotId: v.id('agriculturalPlots'),
         waterSource: v.optional(v.string()), // Water Source: Irrigation, rain-fed, river, or well.
         waterUsage: v.optional(v.number()), // Water Usage: Volume of water needed per crop cycle.
@@ -323,7 +325,7 @@ export const updateIrrigation = mutation({
             rainfallAmount: v.number(), // in millimeters
         })),
     },
-    handler: async(ctx, args) =>{
+    handler: async (ctx, args) => {
         const irrigation = await ctx.db.patch(args.agriculturalPlotId, {
             waterSource: args.waterSource,
             waterUsage: args.waterUsage,
@@ -337,7 +339,7 @@ export const updateIrrigation = mutation({
 });
 
 export const updateFarmInfrastructure = mutation({
-    args:{
+    args: {
         agriculturalPlotId: v.id('agriculturalPlots'),
         farmInfrastructure: v.optional(v.object({
             storageFacilities: v.array(v.string()), // Silos, warehouses, or cold storage for harvest
@@ -345,7 +347,7 @@ export const updateFarmInfrastructure = mutation({
             transportation: v.array(v.string()), // Methods for delivering crops to market
         })),
     },
-    handler: async (ctx, args) =>{
+    handler: async (ctx, args) => {
         const farmInfrastructure = await ctx.db.patch(args.agriculturalPlotId, {
             farmInfrastructure: args.farmInfrastructure,
         });
@@ -354,7 +356,7 @@ export const updateFarmInfrastructure = mutation({
 })
 
 export const updateOwner = mutation({
-    args:{
+    args: {
         agriculturalPlotId: v.id('agriculturalPlots'),
         ownership: v.optional(v.object({
             owner: v.object({
@@ -364,10 +366,36 @@ export const updateOwner = mutation({
             })
         })),
     },
-    handler: async(ctx, args) => {
+    handler: async (ctx, args) => {
         const ownership = await ctx.db.patch(args.agriculturalPlotId, {
             ownership: args.ownership,
         });
         return ownership;
     }
 })
+
+export const getAgriculturalPlotWithBarangay = query({
+    args: {},
+    handler: async (ctx) => {
+        const plots = await ctx.db.query("agriculturalPlots").collect();
+
+        // Get all unique barangay IDs
+        const barangayIds = Array.from(new Set(plots.map(plot => plot.barangayId)));
+
+        // Fetch all relevant barangays in one query
+        const barangays = await Promise.all(
+            barangayIds.map(id => ctx.db.get(id))
+        );
+
+        // Create a map of barangay ID to name for quick lookup
+        const barangayMap = new Map(
+            barangays.map(b => [b!._id, b!.name])
+        );
+
+        // Add barangay name to each plot
+        return plots.map(plot => ({
+            ...plot,
+            barangayName: barangayMap.get(plot.barangayId)
+        }));
+    }
+});

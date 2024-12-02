@@ -151,14 +151,10 @@ export const getBarangayPlots = query({
         ),
     },
     handler: async (ctx, args) => {
-        console.log("Fetching plots for barangay:", args.name);
-
         const barangay = await ctx.db
             .query("barangays")
             .filter((q) => q.eq(q.field("name"), args.name))
             .first()
-
-        console.log("Found barangay:", barangay);
 
         if (!barangay) return []
 
@@ -169,22 +165,22 @@ export const getBarangayPlots = query({
 
         const plotsWithDetails = await Promise.all(
             plots.map(async (plot) => {
-                const farmer = await ctx.db.get(plot.userId)
+                const marker = await ctx.db.get(plot.markerId)
                 const currentCrop = plot.cropHistory.length > 0
                     ? await ctx.db.get(plot.cropHistory[plot.cropHistory.length - 1])
                     : null
+                const farmer = await ctx.db.get(plot.userId)
 
                 return {
                     ...plot,
-                    farmerName: farmer ? `${farmer.fname} ${farmer.lname}` : "Unknown",
-                    currentCrop: currentCrop?.name
+                    currentCrop: currentCrop?.name || null,
+                    yields: marker?.yields || 0,
+                    farmerName: farmer ? `${farmer.fname} ${farmer.lname}` : "Unknown"
                 }
             })
         )
 
-        console.log(`plotsWithDetails: ${plotsWithDetails}`)
-
-        return plotsWithDetails;
+        return plotsWithDetails
     }
 })
 
