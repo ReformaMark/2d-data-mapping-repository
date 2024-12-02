@@ -13,7 +13,8 @@ export const TagInput = ({
 
   const handleAddTag = (e: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (inputValue && !tags.includes(inputValue)) {
+    const normalizedInput = inputValue.toLowerCase(); // Normalize input to lowercase
+    if (normalizedInput && !tags.some(tag => tag.toLowerCase() === normalizedInput)) { // Check for existing tag in a case-insensitive manner
       const newTags = [...tags, inputValue];
       setTags(newTags);
       onTagsChange(newTags); // Update parent component

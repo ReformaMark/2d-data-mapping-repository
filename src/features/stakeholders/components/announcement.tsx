@@ -45,23 +45,23 @@ export default function Announcement() {
                 <h3 className='absolute top-[-10px] left-3 p-1 font-semibold text-white rounded-md bg-green-500'>Recent Activities</h3>
                 {activities && activities.length > 0 ? (
                     activities.slice(0, 5).map((activity) => (
-                        <Link href={"/stakeholder/farms"} key={activity._id}  className="mb-4 p-2 hover:bg-gray-50 flex justify-between items-center">
-                            <div className="">
+                        <Link href={"/stakeholder/farms"} key={activity._id} className="mb-4 p-2 hover:bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center">
+                            <div className="flex-1">
                                 <h3 className="text-lg font-semibold">{activity.title}</h3>
-                                <p>{activity.content}</p>
+                                <p className="text-sm">{activity.content}</p>
                             </div>
-                            <div className="flex">
-                                <h3>{formatDate({convexDate: activity._creationTime})}</h3>
+                            <div className="flex-shrink-0 mt-2 md:mt-0">
+                                <h3 className="text-xs">{formatDate({convexDate: activity._creationTime})}</h3>
                             </div>
                         </Link>
                     ))
                 ) : (
                     <p className="text-center text-gray-500 my-4">No Activities available at the moment.</p>
                 )}
-                 {announcements && announcements.length > 5 && (
-                <CardFooter className='flex justify-end'>
-                    <Link href={`/activities/${user.data?._id}`}>See All</Link>
-                </CardFooter>
+                {activities && activities.length > 5 && (
+                    <CardFooter className='flex justify-end'>
+                        <Link href={`/activities/${user.data?._id}`}>See All</Link>
+                    </CardFooter>
                 )}
             </Card>
          

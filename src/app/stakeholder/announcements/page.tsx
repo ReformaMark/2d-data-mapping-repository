@@ -20,19 +20,19 @@ export default function AnnouncementsPage() {
         <CardContent className="space-y-4">
           {announcements && announcements.length > 0 ? (
             announcements.map((announcement) => (
-            <Link href={`/stakeholder/farms/${announcement.additionalInformation}`}
+              <Link
+                href={`/stakeholder/farms/${announcement.additionalInformation}`}
                 key={announcement._id}
-                className="mb-4 p-2 hover:bg-gray-50 flex justify-between items-center"
+                className="mb-4 p-4 hover:bg-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center"
               >
-               <div className="">
-                   <h3 className="text-lg font-semibold">{announcement.title}</h3>
-                   <p>{announcement.content}</p>
-               </div>
-               <div className="">
-                   <h3>{formatDate({convexDate: announcement._creationTime})}</h3>
-               </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">{announcement.title}</h3>
+                  <p className="text-sm text-gray-600">{announcement.content}</p>
+                </div>
+                <div className="mt-2 md:mt-0 md:ml-4">
+                  <h3 className="text-sm">{formatDate({ convexDate: announcement._creationTime })}</h3>
+                </div>
               </Link>
-    
             ))
           ) : (
             <p className="text-center text-gray-500 my-4">
