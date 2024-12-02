@@ -13,6 +13,7 @@ function FarmerPage() {
 
     return (
         <div>
+            <h1 className="text-4xl font-bold mb-6 ml-16">Farmer Dashboard</h1>
             <Map/>
         </div>
     )

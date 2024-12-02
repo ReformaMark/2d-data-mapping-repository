@@ -17,6 +17,7 @@ import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { Button } from "@/components/ui/button"
 import * as XLSX from 'xlsx'
 import { toast } from "sonner"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function AuditLogsTable() {
     const [dateRange, setDateRange] = useState<{
@@ -76,11 +77,11 @@ export function AuditLogsTable() {
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 w-full sm:w-auto"
                     onClick={handleExport}
                 >
                     <Download className="h-4 w-4" />
@@ -100,44 +101,46 @@ export function AuditLogsTable() {
                 />
             </div>
 
-            <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Action</TableHead>
-                            <TableHead>Details</TableHead>
-                            <TableHead>User Type</TableHead>
-                            <TableHead>Timestamp</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {logs.length === 0 ? (
+            <div className="rounded-md border overflow-hidden">
+                <ScrollArea className="w-full overflow-auto">
+                    <Table>
+                        <TableHeader>
                             <TableRow>
-                                <TableCell
-                                    colSpan={4}
-                                    className="h-24 text-center text-muted-foreground"
-                                >
-                                    No audit logs found for the selected date range
-                                </TableCell>
+                                <TableHead className="min-w-[120px]">Action</TableHead>
+                                <TableHead className="min-w-[200px]">Details</TableHead>
+                                <TableHead className="min-w-[120px]">User Type</TableHead>
+                                <TableHead className="min-w-[150px]">Timestamp</TableHead>
                             </TableRow>
-                        ) : (
-                            logs.map((log) => (
-                                <TableRow key={log._id}>
-                                    <TableCell className="font-medium">
-                                        {log.action}
-                                    </TableCell>
-                                    <TableCell>{log.details}</TableCell>
-                                    <TableCell className="capitalize">
-                                        {log.targetType}
-                                    </TableCell>
-                                    <TableCell>
-                                        {format(log.timestamp, "PPp")}
+                        </TableHeader>
+                        <TableBody>
+                            {logs.length === 0 ? (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={4}
+                                        className="h-24 text-center text-muted-foreground"
+                                    >
+                                        No audit logs found for the selected date range
                                     </TableCell>
                                 </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+                            ) : (
+                                logs.map((log) => (
+                                    <TableRow key={log._id}>
+                                        <TableCell className="font-medium">
+                                            {log.action}
+                                        </TableCell>
+                                        <TableCell>{log.details}</TableCell>
+                                        <TableCell className="capitalize">
+                                            {log.targetType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {format(log.timestamp, "PPp")}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </ScrollArea>
             </div>
         </div>
     )

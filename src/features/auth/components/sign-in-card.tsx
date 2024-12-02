@@ -54,7 +54,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                 email,
                 password,
                 flow: "signIn",
-                captchaToken, // Pass the token to your backend
+                captchaToken,
             });
 
             const timeoutPromise = new Promise((_, reject) => {
@@ -80,7 +80,6 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                 setError("Invalid email or password");
             }
             
-            // Reset reCAPTCHA on error
             recaptchaRef.current?.reset();
             setCaptchaToken(null);
         } finally {
@@ -89,23 +88,23 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
     };
 
     return (
-        <Card className="w-full h-full p-8">
-            <CardHeader className="px-0 pt-0">
-                <CardTitle className="text-primary">
+        <Card className="w-full max-w-[450px] mx-auto p-4 sm:p-6 md:p-8">
+            <CardHeader className="px-0 pt-0 space-y-2">
+                <CardTitle className="text-primary text-xl sm:text-2xl">
                     Login to continue
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm sm:text-base">
                     Use your email or another service to continue
                 </CardDescription>
             </CardHeader>
             {!!error && (
-                <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
-                    <TriangleAlertIcon className="size-4" />
+                <div className="bg-destructive/15 p-2.5 sm:p-3 rounded-md flex items-center gap-x-2 text-xs sm:text-sm text-destructive mb-4 sm:mb-6">
+                    <TriangleAlertIcon className="size-3 sm:size-4" />
                     {error}
                 </div>
             )}
-            <CardContent className="space-y-5 px-0 pb-0">
-                <form onSubmit={onSignIn} className="space-y-2.5">
+            <CardContent className="space-y-4 sm:space-y-5 px-0 pb-0">
+                <form onSubmit={onSignIn} className="space-y-2 sm:space-y-2.5">
                     <Input
                         disabled={pending}
                         value={email}
@@ -113,6 +112,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                         placeholder="Email"
                         type="email"
                         required
+                        className="h-10 sm:h-11"
                     />
                     <Input
                         disabled={pending}
@@ -121,8 +121,9 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                         placeholder="Password"
                         type="password"
                         required
+                        className="h-10 sm:h-11"
                     />
-                    <div className="flex justify-center my-4">
+                    <div className="flex justify-center my-3 sm:my-4 transform scale-90 sm:scale-100">
                         <ReCAPTCHA
                             ref={recaptchaRef}
                             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
@@ -131,13 +132,13 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                     </div>
                     <Button
                         type="submit"
-                        className="w-full"
+                        className="w-full h-10 sm:h-11 text-sm sm:text-base"
                         size={"lg"}
                         disabled={pending || !captchaToken}
                     >
                         {pending ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
                                 Signing In...
                             </>
                         ) : (
@@ -146,8 +147,8 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                     </Button>
                 </form>
                 <Separator />
-                <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
+                <div className="space-y-1.5 sm:space-y-2">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                         Don&apos;t have an account? <span
                             className="text-primary hover:underline cursor-pointer"
                             onClick={() => setState("signUp")}>
@@ -155,7 +156,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
                         </span>
                     </p>
 
-                    <p className="block lg:hidden text-sm text-muted-foreground">
+                    <p className="block lg:hidden text-xs sm:text-sm text-muted-foreground">
                         Changed your mind? <span
                             className="text-primary hover:underline cursor-pointer"
                             onClick={() => router.push("/")}>
