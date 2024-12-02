@@ -2,7 +2,6 @@
 import { useMutation, useQuery } from 'convex/react'
 import React, { useEffect, useState, useCallback } from 'react'
 import { api } from '../../../../convex/_generated/api'
-import { Separator } from '@/components/ui/separator'
 import { Doc, Id } from '../../../../convex/_generated/dataModel'
 import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
