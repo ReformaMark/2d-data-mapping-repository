@@ -118,7 +118,7 @@ export default function SoilHealthForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold">
-                                    Soil pH <span className="text-red-500">*</span>
+                                    Soil pH 
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -157,7 +157,7 @@ export default function SoilHealthForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold">
-                                    Nitrogen Content <span className="text-red-500">*</span>
+                                    Nitrogen Content 
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -177,7 +177,7 @@ export default function SoilHealthForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold">
-                                    Phosphorus Content <span className="text-red-500">*</span>
+                                    Phosphorus Content
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -197,7 +197,7 @@ export default function SoilHealthForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold">
-                                    Potassium Content <span className="text-red-500">*</span>
+                                    Potassium Content
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -217,7 +217,7 @@ export default function SoilHealthForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="font-bold">
-                                    Current Moisture <span className="text-red-500">*</span>
+                                    Current Moisture 
                                 </FormLabel>
                                 <FormControl>
                                     <Input

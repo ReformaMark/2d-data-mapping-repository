@@ -95,7 +95,7 @@ export default function IrrigationForm({
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel className="font-bold">
-                            Water Usage (L) <span className="text-red-500">*</span>
+                            Water Usage (L)
                         </FormLabel>
                         <FormControl>
                             <Input

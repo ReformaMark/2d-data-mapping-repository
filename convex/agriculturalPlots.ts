@@ -179,16 +179,16 @@ export const addCropManagement = mutation({
                 applicationSchedule: v.string(), // ISO date string or description
             }),
             pestAndDiseaseControl: v.object({
-                pests: v.array(v.string()),
-                diseases: v.array(v.string()),
-                controlMeasures: v.array(v.string()),
+                pests: v.string(),
+                diseases: v.string(),
+                controlMeasures: v.string(),
             }),
             cropRotationPlan: v.object({
                 schedule: v.string(), // Description or ISO date string
             }),
             growthMonitoring: v.object({
                 growthStage: v.string(),
-                healthAssessments: v.array(v.string()),
+                healthAssessments: v.string(),
             }),
             harvestingMethods: v.string(), // "manual" | "mechanized"
         })),
@@ -245,16 +245,16 @@ export const updateCropManagement = mutation({
                 applicationSchedule: v.string(),
             }),
             pestAndDiseaseControl: v.object({
-                pests: v.array(v.string()),
-                diseases: v.array(v.string()),
-                controlMeasures: v.array(v.string()),
+                pests: v.string(),
+                diseases: v.string(),
+                controlMeasures: v.string(),
             }),
             cropRotationPlan: v.object({
                 schedule: v.string(),
             }),
             growthMonitoring: v.object({
                 growthStage: v.string(),
-                healthAssessments: v.array(v.string()),
+                healthAssessments: v.string(),
             }),
             harvestingMethods: v.string(), // "manual" | "mechanized"
         }),

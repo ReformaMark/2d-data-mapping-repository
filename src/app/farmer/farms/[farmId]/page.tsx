@@ -165,36 +165,36 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                       <CardContent className="space-y-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Pests:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.pests.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.pests.map((pest, index) => (
-                              <Badge key={index} className="bg-green-100 text-green-700">
-                                {pest}
+                          {farm.cropManagement.pestAndDiseaseControl.pests ? (
+                            
+                              <Badge className="">
+                                {farm.cropManagement.pestAndDiseaseControl.pests}
                               </Badge>
-                            ))
+                            
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Diseases:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.diseases.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.diseases.map((disease, index) => (
-                              <Badge key={index} className="bg-red-100 text-red-700">
-                                {disease}
+                          {farm.cropManagement.pestAndDiseaseControl.diseases ? (
+                          
+                              <Badge className="bg-red-100 text-red-700">
+                                {farm.cropManagement.pestAndDiseaseControl.diseases}
                               </Badge>
-                            ))
+                          
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Control Measures:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.controlMeasures.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.controlMeasures.map((measure, index) => (
-                              <Badge key={index} className="bg-blue-100 text-blue-700">
-                                {measure}
+                          {farm.cropManagement.pestAndDiseaseControl.controlMeasures?.length ? (
+                            
+                              <Badge  className="bg-blue-100 text-blue-700">
+                                {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
                               </Badge>
-                            ))
+                            
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
@@ -226,12 +226,12 @@ function FarmProfilePage({ params }: { params: { farmId: string } }) {
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Health Assessments:</span>
-                          {farm.cropManagement.growthMonitoring.healthAssessments.length > 0 ? (
-                            farm.cropManagement.growthMonitoring.healthAssessments.map((assessment, index) => (
-                              <Badge key={index} className="bg-yellow-100 text-yellow-700">
-                                {assessment}
+                          {farm.cropManagement.pestAndDiseaseControl.controlMeasures ? (
+                          
+                              <Badge className="bg-yellow-100 text-yellow-700">
+                                {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
                               </Badge>
-                            ))
+                          
                           ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
                           )}
