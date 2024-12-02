@@ -70,7 +70,7 @@ export default function Message() {
 
     useEffect(() => {
         getMessages()
-    }, [getMessages])
+    }, [getMessages, mes])
 
     const handleSend = async () => {
         if (!messageValue) {
