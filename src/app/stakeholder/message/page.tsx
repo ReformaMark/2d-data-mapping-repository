@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from 'convex/react'
 import React, { useEffect, useState, useCallback } from 'react'
 import { api } from '../../../../convex/_generated/api'
+import { Separator } from '@/components/ui/separator'
 import { Doc, Id } from '../../../../convex/_generated/dataModel'
 import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -97,8 +98,8 @@ export default function MessagePage() {
 
     if (!messengers) return <Loading />
     return (
-        <div className="flex flex-col md:flex-row">
-            <div className="w-full bg-red-200 md:w-1/4 p-4 md:p-10">
+        <div className=" mt-10 md:mt-0 flex flex-col md:flex-row">
+            <aside className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
                     {messengers.length > 0 ? messengers.map((messenger, index) => (
@@ -116,8 +117,9 @@ export default function MessagePage() {
                         <h1>No messengers</h1>
                     )}
                 </ul>
-            </div>
-            <main className="w-full md:w-3/4 p-4 h-screen bg-green-200">
+            </aside>
+            <Separator orientation="vertical" className="mx-4 hidden md:block" />
+            <main className="w-full md:w-3/4 p-4 h-screen bg-white">
                 {selectedMessenger ? (
                     <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
