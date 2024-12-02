@@ -19,9 +19,11 @@ import {
   MapIcon,
   MessageSquare,
   Settings,
-  Users
+  Users,
+  Menu
 } from "lucide-react";
 import Link from "next/link";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export function AppSidebar({
   header = "Stakeholder Portal",
@@ -50,7 +52,7 @@ export function AppSidebar({
     },
     {
       title: "Barangay Management",
-      url: "/admin/barangays",
+      url: "/admin/barangays", 
       icon: Map,
       items: [
         {
@@ -67,25 +69,6 @@ export function AppSidebar({
         },
       ],
     },
-    // {
-    //   title: "Analytics",
-    //   url: "/admin/analytics",
-    //   icon: LineChart,
-    //   items: [
-    //     {
-    //       title: "Production Overview",
-    //       url: "/admin/analytics/production",
-    //     },
-    //     {
-    //       title: "Yield Analysis",
-    //       url: "/admin/analytics/yield",
-    //     },
-    //     // {
-    //     //   title: "Weather Impact",
-    //     //   url: "/admin/analytics/weather",
-    //     // },
-    //   ],
-    // },
     {
       title: "Reports",
       url: "/admin/reports",
@@ -143,7 +126,6 @@ export function AppSidebar({
   ];
 
   const stakeholderNav = [
-   
     {
       title: "Dashboard",
       url: "/stakeholder",
@@ -206,7 +188,6 @@ export function AppSidebar({
           title: "Farms",
           url: "/farmer/farms",
         },
-        
       ],
     },
     {
@@ -236,14 +217,11 @@ export function AppSidebar({
   const navItems = navigationMap[value];
   const baseUrl = value === 'admin' ? '/admin' : value === 'barangay' ? '/dashboard' : '/stakeholder';
 
-  return (
-    <Sidebar collapsible="none" {...props} className="bg-white h-screen sticky top-0 left-0">
+  const SidebarContents = () => (
+    <div className="bg-white h-screen">
       <SidebarHeader>
         <Link href={baseUrl} className="flex flex-col items-center mb-8">
           <div className="bg-[#8BC34A] w-full py-4 rounded-md flex flex-col items-center">
-            {/* {value !== 'admin' && (
-              <Image src="/logo.svg" alt="A1 Agro" width={50} height={50} className="size-16" />
-            )} */}
             <h1 className="text-sm font-semibold text-center text-white mt-2 px-2">
               {header}
             </h1>
@@ -258,8 +236,32 @@ export function AppSidebar({
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
+    </div>
+  );
 
-      <SidebarRail />
-    </Sidebar>
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block">
+        <Sidebar collapsible="none" {...props} className="bg-white h-screen sticky top-0 left-0">
+          <SidebarContents />
+          <SidebarRail />
+        </Sidebar>
+      </div>
+
+      {/* Mobile Sheet */}
+      <div className="md:hidden fixed top-4 left-4 z-[9999]">
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="p-2 bg-white rounded-md shadow-md">
+              <Menu className="size-6" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-[300px] z-[9999]">
+            <SidebarContents />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 }

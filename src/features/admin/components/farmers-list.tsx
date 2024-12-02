@@ -104,70 +104,71 @@ export function FarmersList() {
 
     return (
         <>
-            <div className="space-y-4">
-                <div className="flex justify-between items-center">
+            <div className="space-y-4 p-4 md:p-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h3 className="text-lg font-medium">Registered Farmers</h3>
                         <p className="text-sm text-muted-foreground">
                             Manage farmer accounts and their access
                         </p>
                     </div>
-                    <Button onClick={() => router.push("/admin/farmers/register")}>
+                    <Button onClick={() => router.push("/admin/farmers/register")} className="w-full md:w-auto">
                         <UserPlus className="h-4 w-4 mr-2" />
                         Register New Farmer
                     </Button>
                 </div>
 
                 {/* Filters and Search */}
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
                     <div className="relative flex-1">
                         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search farmers..."
-                            className="pl-8"
+                            className="pl-8 w-full"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <Select
-                        value={barangayFilter}
-                        onValueChange={setBarangayFilter}
-                    >
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Filter by Barangay" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Barangays</SelectItem>
-                            <SelectItem value="turu">Turu</SelectItem>
-                            <SelectItem value="balitucan">Balitucan</SelectItem>
-                            <SelectItem value="mapinya">Mapinya</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select
-                        value={statusFilter}
-                        onValueChange={setStatusFilter}
-                    >
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Filter by Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Status</SelectItem>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="inactive">Inactive</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <Select
+                            value={barangayFilter}
+                            onValueChange={setBarangayFilter}
+                        >
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Filter by Barangay" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Barangays</SelectItem>
+                                <SelectItem value="turu">Turu</SelectItem>
+                                <SelectItem value="balitucan">Balitucan</SelectItem>
+                                <SelectItem value="mapinya">Mapinya</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <Select
+                            value={statusFilter}
+                            onValueChange={setStatusFilter}
+                        >
+                            <SelectTrigger className="w-full md:w-[180px]">
+                                <SelectValue placeholder="Filter by Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Status</SelectItem>
+                                <SelectItem value="active">Active</SelectItem>
+                                <SelectItem value="inactive">Inactive</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
-                <div className="rounded-md border">
+                <div className="rounded-md border overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Farmer</TableHead>
-                                <TableHead>Barangay</TableHead>
-                                <TableHead>Contact</TableHead>
-                                {/* <TableHead>Total Area</TableHead> */}
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead className="min-w-[200px]">Farmer</TableHead>
+                                <TableHead className="min-w-[100px]">Barangay</TableHead>
+                                <TableHead className="min-w-[120px]">Contact</TableHead>
+                                <TableHead className="min-w-[100px]">Status</TableHead>
+                                <TableHead className="text-right min-w-[80px]">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -182,7 +183,7 @@ export function FarmersList() {
                                     <TableRow key={farmer._id}>
                                         <TableCell>
                                             <div className="flex items-center gap-2">
-                                                <Avatar className="h-8 w-8">
+                                                <Avatar className="h-8 w-8 flex-shrink-0">
                                                     <AvatarImage src={farmer.image} />
                                                     <AvatarFallback>
                                                         {farmer.fname[0]}{farmer.lname[0]}
