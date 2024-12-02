@@ -1,6 +1,6 @@
 /* eslint-disable */
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { LayersControl, MapContainer, Polygon, Popup, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Input } from "@/components/ui/input"
@@ -23,6 +23,7 @@ import { formatDateToMonthYear } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { useCurrentUser } from "@/features/users/api/use-current-user"
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -35,7 +36,7 @@ function MyMap() {
   const searchParams = useSearchParams()
   const search = searchParams.get('search')
   const crops = useQuery(api.crops.getCrops);
-  const agriculturalPlot = useQuery(api.agriculturalPlots.getAgriculturalPlot);
+  const agriculturalPlot = useQuery(api.agriculturalPlots.getAgriculturalPlotWithBarangay);
   const allBarangays = useQuery(api.barangays.get)
   const allMapMarkers = useQuery(api.mapMarkers.getAllMapMarkers)
   const router = useRouter()
@@ -144,6 +145,19 @@ function MyMap() {
     rice: '#D2B48C' // Light Brown
   };
 
+  const { data: currentUser } = useCurrentUser()
+  
+  const handleMoreDetails = (markerId: string) => {
+    const plot = agriculturalPlot?.find(plot => plot.markerId === markerId)
+    if (!plot?.barangayName) return
+
+    if (currentUser?.role === 'admin') {
+      router.push(`/admin/barangays/${plot.barangayName}/plots/${plot._id}`)
+    } else if (currentUser?.role === 'stakeholder') {
+      router.push(`/stakeholder/farms/${plot._id}`)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <Card>
@@ -248,10 +262,14 @@ function MyMap() {
                         </div>
                       )}
                       <div className="flex justify-end mt-2">
-                        <Button variant="link" onClick={() => {
-                          const find = agriculturalPlot?.find(plot => plot.markerId === marker._id)
-                          router.push(`/stakeholder/farms/${find?._id}`)
-                        }}>
+                        <Button 
+                          variant="link" 
+                          onClick={() => {
+                            const find = agriculturalPlot?.find(plot => plot.markerId === marker._id)
+                            if (!find?._id) return
+                            handleMoreDetails(marker._id)
+                          }}
+                        >
                           More Details
                         </Button>
                       </div>

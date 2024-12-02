@@ -1,5 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 export const list = query({
     handler: async (ctx) => {
@@ -31,3 +32,22 @@ export const getBarangay = query({
         return barangay;
     }
 })
+
+export const getByName = query({
+    args: {
+        name: v.union(
+            v.literal("Turu"),
+            v.literal("Balitucan"),
+            v.literal("Mapinya")
+        ),
+    },
+    handler: async (ctx, args) => {
+        const barangay = await ctx.db
+            .query("barangays")
+            .filter((q) => q.eq(q.field("name"), args.name))
+            .first();
+
+        if (!barangay) throw new Error(`Barangay ${args.name} not found`);
+        return barangay;
+    },
+});

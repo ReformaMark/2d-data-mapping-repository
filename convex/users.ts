@@ -86,3 +86,15 @@ export const editUserProfile = mutation({
         return await ctx.db.get(userId);
     }
 })
+
+export const getFarmers = query({
+    args: {},
+    handler: async (ctx) => {
+        const farmers = await ctx.db
+            .query("users")
+            .filter((q) => q.eq(q.field("role"), "farmer"))
+            .collect();
+
+        return farmers;
+    },
+});

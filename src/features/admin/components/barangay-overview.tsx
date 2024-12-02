@@ -1,26 +1,39 @@
 "use client"
 
+import Loading from "@/components/loading"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useQuery } from "convex/react"
-import { MapPin, Users, Wheat, BarChart } from "lucide-react"
+import { BarChart, MapPin, Users, Wheat } from "lucide-react"
 import { api } from "../../../../convex/_generated/api"
-import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip } from 'recharts'
 
 interface BarangayOverviewProps {
     barangayName: "Turu" | "Balitucan" | "Mapinya"
 }
 
+interface PlotWithDetails {
+    _id: string;
+    area: number;
+    status: string;
+    yields: number;
+    currentCrop: string | null;
+    farmerName: string;
+}
+
 export function BarangayOverview({ barangayName }: BarangayOverviewProps) {
+    const plots = useQuery(api.admin.getBarangayPlots, { 
+        name: barangayName 
+    }) as PlotWithDetails[] | undefined
+    
     const barangayData = useQuery(api.admin.getBarangayDetails, {
         name: barangayName
     })
 
-    if (!barangayData) return null
+    if (!plots || !barangayData) return <Loading />
 
     const stats = [
         {
             title: "Total Area",
-            value: `${barangayData.totalArea.toFixed(2)} ha`,
+            value: `${plots.reduce((sum, plot) => sum + plot.area, 0).toFixed(2)} ha`,
             icon: MapPin,
             description: "Total agricultural area",
             color: "text-emerald-500"
@@ -34,30 +47,45 @@ export function BarangayOverview({ barangayName }: BarangayOverviewProps) {
         },
         {
             title: "Active Plots",
-            value: barangayData.activePlots,
+            value: plots.filter(plot => plot.status === 'active').length,
             icon: Wheat,
             description: "Currently cultivated plots",
             color: "text-amber-500"
         },
         {
             title: "Production Volume",
-            value: `${barangayData.totalProduction.toFixed(2)} MT`,
+            value: `${plots.reduce((total, plot) => total + (plot.yields || 0), 0).toFixed(2)} MT`,
             icon: BarChart,
-            description: "Total production records this quarter",
+            description: "Total production records",
             color: "text-purple-500"
         }
     ]
 
-    // Transform production data for pie chart
-    const productionData = barangayData.barangay?.production ? [
-        { name: 'Rice', value: barangayData.barangay.production.rice },
-        { name: 'Corn', value: barangayData.barangay.production.corn },
-        { name: 'Carrots', value: barangayData.barangay.production.carrots },
-        { name: 'Tomatoes', value: barangayData.barangay.production.tomatoes },
-        { name: 'Eggplant', value: barangayData.barangay.production.eggplant }
-    ] : []
+    // Calculate chart data from active plots only
+    // const chartData = plots
+    //     .filter(plot => plot.status === 'active')
+    //     .reduce((acc, plot) => {
+    //         if (plot.currentCrop) {
+    //             const existing = acc.find(item => item.cropType === plot.currentCrop);
+    //             if (existing) {
+    //                 existing.totalYields += plot.yields || 0;
+    //             } else {
+    //                 acc.push({
+    //                     cropType: plot.currentCrop,
+    //                     totalYields: plot.yields || 0
+    //                 });
+    //             }
+    //         }
+    //         return acc;
+    //     }, [] as { cropType: string, totalYields: number }[]);
 
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
+    // const COLORS = {
+    //     corn: '#FFD700', // Yellow
+    //     tomatoes: '#FF0000', // Red
+    //     eggplant: '#8A2BE2', // Violet
+    //     carrot: '#ffa500', // Orange
+    //     rice: '#D2B48C' // Light Brown
+    // };
 
     return (
         <div className="space-y-6">
@@ -80,34 +108,55 @@ export function BarangayOverview({ barangayName }: BarangayOverviewProps) {
                 ))}
             </div>
 
-            <Card>
+            {/* <Card>
                 <CardHeader>
-                    <CardTitle>Crop Production Distribution</CardTitle>
+                    <CardTitle>Agricultural Production by Crop Type</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="h-[300px]">
+                    <div className="mt-4 flex justify-center items-center">
+                        <ul className="list-none grid grid-cols-5">
+                            {chartData.map((entry, index) => (
+                                <li key={`legend-${index}`} className="flex items-center">
+                                    <span
+                                        className="inline-block w-10 h-3 mr-2"
+                                        style={{ backgroundColor: COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS] }}
+                                    ></span>
+                                    <span className="capitalize">{entry.cropType}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="h-[400px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={productionData}
+                                    data={chartData}
+                                    dataKey="totalYields"
+                                    nameKey="cropType"
                                     cx="50%"
                                     cy="50%"
-                                    labelLine={false}
-                                    outerRadius={100}
+                                    outerRadius={150}
                                     fill="#8884d8"
-                                    dataKey="value"
+                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                 >
-                                    {productionData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    {chartData.map((entry) => (
+                                        <Cell 
+                                            key={`cell-${entry.cropType}`} 
+                                            fill={COLORS[entry.cropType.toLowerCase() as keyof typeof COLORS]} 
+                                        />
                                     ))}
                                 </Pie>
-                                <Tooltip />
-                                <Legend />
+                                <Tooltip 
+                                    formatter={(value, name, props: any) => [
+                                        `${value} tons ${props?.payload?.[0]?.percent ? `(${(props.payload[0].percent * 100).toFixed(2)}%)` : ''}`,
+                                        name
+                                    ]} 
+                                />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
         </div>
     )
 }
