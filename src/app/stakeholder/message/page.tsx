@@ -4,7 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { api } from '../../../../convex/_generated/api'
 import { Separator } from '@/components/ui/separator'
 import { Doc, Id } from '../../../../convex/_generated/dataModel'
-// import Loading from '@/components/loading'
+import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useSearchParams } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
@@ -96,12 +96,13 @@ export default function MessagePage() {
         }
     }
 
+    if (!messengers) return <Loading />
     return (
-        <div className="  z-10 mt-10 md:mt-0 flex flex-col md:flex-row">
-            <div className="w-full  md:w-1/4 p-4 md:p-10 bg-gray-100">
+        <div className="flex flex-col md:flex-row">
+            <div className="w-full bg-red-200 md:w-1/4 p-4 md:p-10">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
-                    {messengers && messengers?.length > 0 ? messengers?.map((messenger, index) => (
+                    {messengers.length > 0 ? messengers.map((messenger, index) => (
                         <li key={index} className="cursor-pointer p-2 space-y-2 bg-white hover:bg-gray-200 rounded-md" onClick={() => setSelectedMessenger(messenger)}>
                             <div className="flex gap-x-3 items-center">
                                 <Avatar>
@@ -117,8 +118,7 @@ export default function MessagePage() {
                     )}
                 </ul>
             </div>
-            <Separator orientation="vertical" className="mx-4 hidden md:block" />
-            <main className="w-full md:w-3/4 p-4 h-screen bg-white">
+            <main className="w-full md:w-3/4 p-4 h-screen bg-green-200">
                 {selectedMessenger ? (
                     <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
