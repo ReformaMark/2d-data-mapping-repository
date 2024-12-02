@@ -99,57 +99,7 @@ export default function MessagePage() {
     if (!messengers) return <Loading />
     return (
         <div className=" mt-10 md:mt-0 flex flex-col md:flex-row">
-            <aside className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
-                <h2 className="text-xl font-semibold">Messengers</h2>
-                <ul>
-                    {messengers.length > 0 ? messengers.map((messenger, index) => (
-                        <li key={index} className="cursor-pointer p-2 space-y-2 bg-white hover:bg-gray-200 rounded-md" onClick={() => setSelectedMessenger(messenger)}>
-                            <div className="flex gap-x-3 items-center">
-                                <Avatar>
-                                    <AvatarImage src={messenger?.senderUser?.image} alt={messenger?.senderUser?.lname} />
-                                    <AvatarFallback>{messenger?.senderUser?.fname?.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <h1 className='font-semibold'>{messenger?.senderUser?.fname} {messenger?.senderUser?.lname}</h1>
-                            </div>
-                            <pre className='truncate text-xs text-gray-500'>Recent Message: {messenger?.latestMessage?.message}</pre>
-                        </li>
-                    )) : (
-                        <h1>No messengers</h1>
-                    )}
-                </ul>
-            </aside>
-            <Separator orientation="vertical" className="mx-4 hidden md:block" />
-            <main className="w-full md:w-3/4 p-4 h-screen bg-white">
-                {selectedMessenger ? (
-                    <div className='p-4 md:p-10 space-y-10'>
-                        <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
-                        <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 ">
-                            {mes && mes.length > 0 ? (
-                                <div className='flex flex-col-reverse gap-y-3 overflow-y-scroll'>
-                                    {mes.map((message, index) => (
-                                        <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-left bg-gray-300 rounded-md self-end'}`}>
-                                            <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
-                                            <p className='text-xs text-white text-right'>{formatDate({convexDate: message._creationTime})}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <h1>No messages</h1>
-                            )}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-5 items-center">
-                            <Textarea
-                                value={messageValue}
-                                onChange={(e) => setMessageValue(e.target.value)}
-                                className="col-span-12 md:col-span-10 border-green-200 bg-green-50 focus:ring-green-500"
-                            />
-                            <Button onClick={handleSend} className='col-span-12 md:col-span-2'>Send</Button>
-                        </div>
-                    </div>
-                ) : (
-                    <p>Select a messenger to view the conversation</p>
-                )}
-            </main>
+           
         </div>
     )
 }
