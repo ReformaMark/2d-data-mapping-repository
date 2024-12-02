@@ -43,23 +43,15 @@ interface MessengerTypes {
     } | null;
 }
 
+
 export default function Message() {
     const messengers = useQuery(api.chats.getMessengers)
     const [selectedMessenger, setSelectedMessenger] = useState<MessengerTypes | null>(null)
-    const [mes, setMes] = useState<Doc<'chats'>[]>([])
-    const messages = useMutation(api.chats.getMessages)
+   
+    const chats = useQuery(api.chats.getMessages, {senderId: selectedMessenger?.id as Id<'users'>})
     const sendMessage = useMutation(api.chats.sendMessage)
     const [messageValue, setMessageValue] = useState('')
 
-    const getMessages = useCallback(async () => {
-        const targetId = selectedMessenger?.id;
-        if (targetId) {
-            const m = await messages({ senderId: targetId }) || [];
-            setMes(m);
-        } else {
-            setMes([]);
-        }
-    }, [selectedMessenger, messages])
 
     useEffect(() => {
         if (messengers?.length) {
@@ -67,10 +59,6 @@ export default function Message() {
             setSelectedMessenger(initialMessenger);
         }
     }, [messengers])
-
-    useEffect(() => {
-        getMessages()
-    }, [getMessages, mes])
 
     const handleSend = async () => {
         if (!messageValue) {
@@ -120,9 +108,9 @@ export default function Message() {
                     <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
                         <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 ">
-                            {mes.length > 0 ? (
+                            {chats && chats?.length > 0 ? (
                                 <div className='flex flex-col-reverse gap-y-3 overflow-y-scroll'>
-                                    {mes.map((message, index) => (
+                                    {chats?.map((message, index) => (
                                         <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-left bg-gray-300 rounded-md self-end'}`}>
                                             <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
                                             <p className='text-xs text-white text-right'>{formatDate({ convexDate: message._creationTime })}</p>

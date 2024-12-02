@@ -6,7 +6,6 @@ import { Separator } from '@/components/ui/separator'
 import { Doc, Id } from '../../../../convex/_generated/dataModel'
 import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useSearchParams } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -17,18 +16,18 @@ interface MessengerTypes {
     senderUser: {
         _id: Id<"users">;
         _creationTime: number;
-        image?: string | undefined;
-        isActive?: boolean | undefined;
+        image?: string;
+        isActive?: boolean;
         farmerProfile?: {
             isActive: boolean;
             barangayId: Id<"barangays">;
             contactNumber: string;
             address: string;
-        } | undefined;
+        };
         stakeholderProfile?: {
             isActive: boolean;
             contactNumber: string;
-        } | undefined;
+        };
         fname: string;
         lname: string;
         email: string;
@@ -44,62 +43,47 @@ interface MessengerTypes {
     } | null;
 }
 
-export default function MessagePage() {
-    const searchParams = useSearchParams()
-    const sendMessageTo = searchParams.get('sendMessageTo')
+
+export default function Message() {
     const messengers = useQuery(api.chats.getMessengers)
     const [selectedMessenger, setSelectedMessenger] = useState<MessengerTypes | null>(null)
-    const [mes, setMes] = useState<Doc<'chats'>[] | null>(null)
-    const messages = useMutation(api.chats.getMessages)
+   
+    const chats = useQuery(api.chats.getMessages, {senderId: selectedMessenger?.id as Id<'users'>})
     const sendMessage = useMutation(api.chats.sendMessage)
     const [messageValue, setMessageValue] = useState('')
 
-    const getMessages = useCallback(async () => {
-        const targetId = selectedMessenger?.id || (sendMessageTo ? sendMessageTo as Id<'users'> : null);
-        if (targetId) {
-            const m = await messages({ senderId: targetId });
-            setMes(m);
-        } else {
-            setMes([]);
-        }
-    }, [selectedMessenger, sendMessageTo, messages])
 
     useEffect(() => {
-        if (messengers && messengers.length > 0) {
-            const initialMessenger = sendMessageTo ? messengers.find(m => m?.id === sendMessageTo) : messengers[0];
-            setSelectedMessenger(initialMessenger || null);
+        if (messengers?.length) {
+            const initialMessenger = messengers[0];
+            setSelectedMessenger(initialMessenger);
         }
-    }, [messengers, sendMessageTo])
+    }, [messengers])
 
-    useEffect(() => {
-        getMessages()
-    }, [getMessages, mes])
-
-    const handleSend = async() => {
-        if (messageValue === "") {
-            toast.error("Invalid message! Please Try again.")
+    const handleSend = async () => {
+        if (!messageValue) {
+            toast.error("Invalid message! Please try again.")
             return
         }
         if (selectedMessenger) {
             toast.promise(sendMessage({
                 recieverId: selectedMessenger.id as Id<'users'>,
                 message: messageValue
-            }),
-            {
+            }), {
                 loading: 'Sending your message...',
                 success: "Message sent.",
                 error: "Unable to send your message."
             })
             setMessageValue("")
         } else {
-            toast.warning("Please select user first.")
+            toast.warning("Please select a user first.")
         }
     }
 
     if (!messengers) return <Loading />
     return (
-        <div className=" mt-10 md:mt-0 flex flex-col md:flex-row">
-            <aside className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
+        <div className="z-[10] mt-10 md:mt-0 flex flex-col md:flex-row">
+            <div className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
                 <ul>
                     {messengers.length > 0 ? messengers.map((messenger, index) => (
@@ -117,19 +101,19 @@ export default function MessagePage() {
                         <h1>No messengers</h1>
                     )}
                 </ul>
-            </aside>
+            </div>
             <Separator orientation="vertical" className="mx-4 hidden md:block" />
             <main className="w-full md:w-3/4 p-4 h-screen bg-white">
                 {selectedMessenger ? (
                     <div className='p-4 md:p-10 space-y-10'>
                         <h2 className="text-xl font-semibold">Conversation with {selectedMessenger.senderUser?.fname} {selectedMessenger.senderUser?.lname}</h2>
                         <div className="flex flex-col gap-y-3 justify-end p-5 h-[600px] bg-gray-100 ">
-                            {mes && mes.length > 0 ? (
+                            {chats && chats?.length > 0 ? (
                                 <div className='flex flex-col-reverse gap-y-3 overflow-y-scroll'>
-                                    {mes.map((message, index) => (
+                                    {chats?.map((message, index) => (
                                         <div key={index} className={`p-2 w-full md:w-1/2 ${message.senderId === selectedMessenger.id ? 'bg-green-500 rounded-md text-white' : 'text-left bg-gray-300 rounded-md self-end'}`}>
                                             <pre className="whitespace-pre-wrap break-words">{message.message}</pre>
-                                            <p className='text-xs text-white text-right'>{formatDate({convexDate: message._creationTime})}</p>
+                                            <p className='text-xs text-white text-right'>{formatDate({ convexDate: message._creationTime })}</p>
                                         </div>
                                     ))}
                                 </div>

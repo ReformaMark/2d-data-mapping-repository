@@ -25,21 +25,23 @@ export const getMessengers = query({
     }
 });
 
-export const getMessages = mutation({
+export const getMessages = query({
     args: {
-        senderId: v.id('users')
+        senderId: v.optional(v.id('users'))
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
         if (userId === null) return null;
+        
+        if(!args.senderId) return null;
 
         const sentMessages = await ctx.db.query("chats")
-            .withIndex("by_sender_receiver", q => q.eq("senderId", userId).eq("receiverId", args.senderId))
+            .withIndex("by_sender_receiver", q => q.eq("senderId", userId).eq("receiverId", args.senderId!))
             .order('desc')
             .collect();
 
         const receivedMessages = await ctx.db.query("chats")
-            .withIndex("by_sender_receiver", q => q.eq("senderId", args.senderId).eq("receiverId", userId))
+            .withIndex("by_sender_receiver", q => q.eq("senderId",args.senderId!).eq("receiverId", userId))
             .order('desc')
             .collect();
 
@@ -68,4 +70,18 @@ export const sendMessage = mutation({
 
         return message
     },
+})
+
+export const getChats = query({
+    args:{
+        senderId: v.id('users')
+    },
+    handler: async (ctx) =>{
+        const userId = await getAuthUserId(ctx)
+        if(userId === null) return
+
+        const chats = await ctx.db.query('chats').collect()
+
+        return chats
+    }
 })
