@@ -20,6 +20,8 @@ export function RoleCheck() {
                 router.push("/farmer")
             }
         }
+
+        console.log(role)
     }, [isAuthenticated, isAuthLoading, isRoleLoading, role, router])
 
     return null
