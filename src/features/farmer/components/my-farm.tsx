@@ -125,39 +125,39 @@ export default function MyFarm() {
                       <CardContent className="space-y-3">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Pests:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.pests.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.pests.map((pest, index) => (
-                              <Badge key={index} className="bg-green-100 text-green-700">
-                                {pest}
-                              </Badge>
-                            ))
-                          ) : (
+                            {farm.cropManagement.pestAndDiseaseControl.pests ? (
+                            
+                            <Badge className="bg-yellow-100 text-yellow-700">
+                                {farm.cropManagement.pestAndDiseaseControl.pests}
+                            </Badge>
+                    
+                            ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
-                          )}
+                            )}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Diseases:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.diseases.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.diseases.map((disease, index) => (
-                              <Badge key={index} className="bg-red-100 text-red-700">
-                                {disease}
-                              </Badge>
-                            ))
-                          ) : (
+                           {farm.cropManagement.pestAndDiseaseControl.diseases ? (
+                            
+                            <Badge className="bg-yellow-100 text-yellow-700">
+                                {farm.cropManagement.pestAndDiseaseControl.diseases}
+                            </Badge>
+                    
+                            ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
-                          )}
+                            )}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Control Measures:</span>
-                          {farm.cropManagement.pestAndDiseaseControl.controlMeasures.length > 0 ? (
-                            farm.cropManagement.pestAndDiseaseControl.controlMeasures.map((measure, index) => (
-                              <Badge key={index} className="bg-blue-100 text-blue-700">
-                                {measure}
-                              </Badge>
-                            ))
-                          ) : (
+                            {farm.cropManagement.pestAndDiseaseControl.controlMeasures? (
+                            
+                            <Badge className="bg-yellow-100 text-yellow-700">
+                                {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
+                            </Badge>
+                    
+                            ) : (
                             <Badge className="bg-gray-100 text-gray-600">None</Badge>
-                          )}
+                            )}
                         </div>
                       </CardContent>
                     </Card>
@@ -186,15 +186,13 @@ export default function MyFarm() {
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-medium text-gray-600">Health Assessments:</span>
-                          {farm.cropManagement.growthMonitoring.healthAssessments.length > 0 ? (
-                            farm.cropManagement.growthMonitoring.healthAssessments.map((assessment, index) => (
-                              <Badge key={index} className="bg-yellow-100 text-yellow-700">
-                                {assessment}
-                              </Badge>
-                            ))
-                          ) : (
-                            <Badge className="bg-gray-100 text-gray-600">None</Badge>
-                          )}
+                          {farm.cropManagement.pestAndDiseaseControl.controlMeasures ? (
+                                <Badge className="bg-yellow-100 text-yellow-700">
+                                    {farm.cropManagement.pestAndDiseaseControl.controlMeasures}
+                                </Badge>
+                            ) : (
+                                <Badge className="bg-gray-100 text-gray-600">None</Badge>
+                            )}
                         </div>
                       </CardContent>
                     </Card>
@@ -211,8 +209,6 @@ export default function MyFarm() {
                       </CardContent>
                     </Card>
                   </div>
-                  
-                     
                     ) : (
                         <p>The owner or the farmer has not yet provided crop management information.</p>
                     )}
@@ -230,7 +226,7 @@ export default function MyFarm() {
                                 <p><strong>pH Level:</strong> {farm.soilInfo.pH}</p>
                                 <p><strong>Texture:</strong> {farm.soilInfo.texture}</p>
                                 <p><strong>Nutrient Content:</strong> Nitrogen - {farm.soilInfo.nutrientContent.nitrogen}, Phosphorus - {farm.soilInfo.nutrientContent.phosphorus}, Potassium - {farm.soilInfo.nutrientContent.potassium}</p>
-                                <p><strong>Moisture:</strong> Current - {farm.soilInfo.moisture.current}, Historical - {farm.soilInfo.moisture.historical.join(', ')}</p>
+                                <p><strong>Moisture:</strong> Current - {farm.soilInfo.moisture.current}</p>
                                 <p><strong>Erosion Risk:</strong> {farm.soilInfo.erosionRisk}</p>
                             </div>
                         ) : (

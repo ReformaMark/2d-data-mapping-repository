@@ -99,16 +99,16 @@ export interface FarmTypes {
             applicationSchedule: string;
         };
         pestAndDiseaseControl: {
-            pests: string[];
-            diseases: string[];
-            controlMeasures: string[];
+            pests: string;
+            diseases: string;
+            controlMeasures: string;
         };
         cropRotationPlan: {
             schedule: string;
         };
         growthMonitoring: {
             growthStage: string;
-            healthAssessments: string[];
+            healthAssessments: string;
         };
         harvestingMethods: string;
     } | undefined;
@@ -154,16 +154,16 @@ const FormSchema = z.object({
           applicationSchedule: z.string().nonempty({ message: "Application schedule is required." }),
         }),
         pestAndDiseaseControl: z.object({
-          pests: z.array(z.string()).default([]),
-          diseases: z.array(z.string()).default([]),
-          controlMeasures: z.array(z.string()).default([]),
+          pests: z.string(),
+          diseases: z.string(),
+          controlMeasures: z.string(),
         }),
         cropRotationPlan: z.object({
           schedule: z.string().nonempty({ message: "Crop rotation schedule is required." }),
         }),
         growthMonitoring: z.object({
           growthStage: z.string().nonempty({ message: "Growth stage is required." }),
-          healthAssessments: z.array(z.string()).default([]),
+          healthAssessments: z.string(),
         }),
         harvestingMethods: z
           .string()
@@ -191,16 +191,16 @@ export default function CropManagementForm({ farm, setIsOpen }: {
               applicationSchedule: farm.cropManagement?.fertilizerApplication?.applicationSchedule || "",
             },
             pestAndDiseaseControl: {
-              pests: farm.cropManagement?.pestAndDiseaseControl?.pests || [],
-              diseases: farm.cropManagement?.pestAndDiseaseControl?.diseases || [],
-              controlMeasures: farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || [],
+              pests: farm.cropManagement?.pestAndDiseaseControl?.pests || "",
+              diseases: farm.cropManagement?.pestAndDiseaseControl?.diseases || "",
+              controlMeasures: farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || "",
             },
             cropRotationPlan: {
               schedule: farm.cropManagement?.cropRotationPlan?.schedule || "",
             },
             growthMonitoring: {
               growthStage: farm.cropManagement?.growthMonitoring?.growthStage || "",
-              healthAssessments: farm.cropManagement?.growthMonitoring?.healthAssessments || [],
+              healthAssessments: farm.cropManagement?.growthMonitoring?.healthAssessments || "",
             },
             harvestingMethods: farm.cropManagement?.harvestingMethods || "", // Default to "manual"
           },
@@ -217,16 +217,16 @@ export default function CropManagementForm({ farm, setIsOpen }: {
             applicationSchedule: values.cropManagement?.fertilizerApplication.applicationSchedule || farm.cropManagement?.fertilizerApplication?.applicationSchedule || "",
             },
             pestAndDiseaseControl: {
-            pests: values.cropManagement?.pestAndDiseaseControl.pests || farm.cropManagement?.pestAndDiseaseControl?.pests || [],
-            diseases: values.cropManagement?.pestAndDiseaseControl.diseases || farm.cropManagement?.pestAndDiseaseControl?.diseases || [],
-            controlMeasures: values.cropManagement?.pestAndDiseaseControl.controlMeasures || farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || [],
+            pests: values.cropManagement?.pestAndDiseaseControl.pests || farm.cropManagement?.pestAndDiseaseControl?.pests || "",
+            diseases: values.cropManagement?.pestAndDiseaseControl.diseases || farm.cropManagement?.pestAndDiseaseControl?.diseases || "",
+            controlMeasures: values.cropManagement?.pestAndDiseaseControl.controlMeasures || farm.cropManagement?.pestAndDiseaseControl?.controlMeasures || "",
             },
             cropRotationPlan: {
             schedule: values.cropManagement?.cropRotationPlan.schedule || farm.cropManagement?.cropRotationPlan?.schedule || "",
             },
             growthMonitoring: {
             growthStage: values.cropManagement?.growthMonitoring.growthStage || farm.cropManagement?.growthMonitoring?.growthStage || "",
-            healthAssessments: values.cropManagement?.growthMonitoring.healthAssessments || farm.cropManagement?.growthMonitoring?.healthAssessments || [],
+            healthAssessments: values.cropManagement?.growthMonitoring.healthAssessments || farm.cropManagement?.growthMonitoring?.healthAssessments ||"",
             },
             harvestingMethods: values.cropManagement?.harvestingMethods || farm.cropManagement?.harvestingMethods || "manual",
         },
@@ -304,7 +304,7 @@ export default function CropManagementForm({ farm, setIsOpen }: {
                     name="cropManagement.pestAndDiseaseControl.pests"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-bold">Pests <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel className="font-bold">Pests</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Enter pests (comma separated)"
@@ -321,7 +321,7 @@ export default function CropManagementForm({ farm, setIsOpen }: {
                     name="cropManagement.pestAndDiseaseControl.diseases"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-bold">Diseases <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel className="font-bold">Diseases</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Enter diseases (comma separated)"
@@ -338,7 +338,7 @@ export default function CropManagementForm({ farm, setIsOpen }: {
                     name="cropManagement.pestAndDiseaseControl.controlMeasures"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-bold">Control Measures <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel className="font-bold">Control Measures</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Enter control measures (comma separated)"
@@ -389,7 +389,7 @@ export default function CropManagementForm({ farm, setIsOpen }: {
                     name="cropManagement.growthMonitoring.healthAssessments"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="font-bold">Health Assessments <span className="text-red-500">*</span></FormLabel>
+                            <FormLabel className="font-bold">Health Assessments</FormLabel>
                             <FormControl>
                                 <Input
                                     placeholder="Enter health assessments (comma separated)"
