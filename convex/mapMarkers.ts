@@ -36,7 +36,7 @@ export const createMapMarker = mutation({
 
 export const getMapMarkers = query({
   
-    handler: async (ctx) => {
+    handler: async (ctx) => { 
         const userId = await getAuthUserId(ctx);
 
         if (!userId) return [];
@@ -51,6 +51,28 @@ export const getMapMarkers = query({
 
         return await ctx.db.query("mapMarkers")
             .filter(q => q.eq(q.field("barangay"), barangay.name))
+            .collect();
+    }
+})
+
+export const getMapMarkerByUserId = query({
+  
+    handler: async (ctx) => { 
+        const userId = await getAuthUserId(ctx);
+
+        if (!userId) return [];
+
+        const user = await ctx.db.get(userId);
+        if (!user) return [];
+
+        if (!user.farmerProfile) return [];
+
+        const barangay = await ctx.db.get(user.farmerProfile.barangayId);
+        if (!barangay) return [];
+
+        return await ctx.db.query("mapMarkers")
+            .filter(q => q.eq(q.field("barangay"), barangay.name))
+            .filter(q => q.eq(q.field("userId"), userId))
             .collect();
     }
 })
