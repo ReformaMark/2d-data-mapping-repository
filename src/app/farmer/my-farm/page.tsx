@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 export default function MyFarmPage() {
   const mapMarker = useQuery(api.mapMarkers.getMapMarkerByUserId)
-
+ console.log(mapMarker)
   if (!mapMarker || mapMarker.length < 1) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -19,7 +19,7 @@ export default function MyFarmPage() {
           </CardHeader>
           <CardContent>
             <p className="text-center text-gray-600">
-              You haven't created any farms yet. Start by creating your farm now!
+              You haven&apos;t created any farms yet. Start by creating your farm now!
             </p>
           </CardContent>
           <CardFooter className="flex justify-center">
