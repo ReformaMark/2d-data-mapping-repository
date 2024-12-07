@@ -150,7 +150,7 @@ export const getFarmByUserId = query({
             .filter(q => q.eq(q.field("userId"), userId))
             .first();
 
-        if (!farm) throw new Error("Farm not found");
+        if (!farm) return undefined;
 
         const mapMarker = await ctx.db.get(farm.markerId);
         const cropHistory = await Promise.all(

@@ -2,7 +2,6 @@
 import { useMutation, useQuery } from 'convex/react'
 import React, { useState } from 'react'
 import { api } from '../../../../convex/_generated/api'
-import Loading from '@/components/loading'
 import { Separator } from '@/components/ui/separator'
 import Image from 'next/image'
 import corn from '@/../public/images/corn.png';
@@ -24,16 +23,40 @@ import { Id } from '../../../../convex/_generated/dataModel'
 import { FormControl, FormField, FormLabel, FormItem, FormMessage, Form } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import CropManagementForm, { FarmTypes } from './crop-management-form'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import SoilHealthForm from './soil-health-form'
 import IrrigationForm from './irrigation-form'
 import FarmInfrastructureForm from './farm-infrastructure-form'
 import OwnerForm from './owner-form'
+import Link from 'next/link'
 
 export default function MyFarm() {
     const farm = useQuery(api.agriculturalPlots.getFarmByUserId)
 
-    if (!farm) return <Loading/>
+    if (!farm) {
+        return (
+          <div className="flex justify-center items-center h-dvh">
+            <Card className="w-[350px]">
+              <CardHeader>
+                <CardTitle className="text-center">No Farms Found</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-center text-gray-600">
+                  You haven&apos;t created any farms yet. Start by creating your farm now!
+                </p>
+              </CardContent>
+              <CardFooter className="flex justify-center">
+                <Link href="/farmer" className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
+                 
+                    Create a Farm
+                 
+                </Link>
+              </CardFooter>
+            </Card>
+          </div>
+        );
+      }
+
 
     return (
         <article className="p-4 w-full bg-white rounded-md shadow-md"> 
