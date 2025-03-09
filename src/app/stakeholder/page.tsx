@@ -6,6 +6,7 @@ import Turu from '@/../public/images/brgy-turu-logo.jpg'
 import Balitucan from '@/../public/images/brgy-balitucan-mapinya-logo.jpg'
 import MaPinya from '@/../public/images/brgy-balitucan-mapinya-logo.jpg'
 import Announcement from '@/features/stakeholders/components/announcement'
+import PriceDisplay from '@/features/stakeholders/components/prices'
 
 function Dashboard() {
   return (
@@ -77,6 +78,7 @@ function Dashboard() {
 
       
       </div>
+      <PriceDisplay/>
       <Announcement/>
     </div>
   )
