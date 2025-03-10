@@ -28,7 +28,7 @@ export async function scrapeAndExtractPrices() {
     const pdfUrl = pdfLinks[0];
     console.log(`Reading PDF from: ${pdfUrl}`);
     const response = await fetch(pdfUrl);
-
+    console.log(response)
     // Extract date from PDF URL
     const dateMatch = pdfUrl.match(/(\w+)-(\d+)-(\d{4})\.pdf$/);
     let date = '';
@@ -36,9 +36,7 @@ export async function scrapeAndExtractPrices() {
       const [_, month, day, year] = dateMatch;
       date = `${month} ${day}, ${year}`;
     }
-    if (!response.ok) {
-      throw new Error(`Failed to fetch PDF: ${response.statusText}`);
-    }
+   
 
     const buffer = Buffer.from(await response.arrayBuffer());
     let items: string[] = [];
