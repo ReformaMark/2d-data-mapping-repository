@@ -1,6 +1,7 @@
 'use server';
 
-import puppeteer from 'puppeteer';
+import axios from "axios";
+import * as cheerio from "cheerio";
 import { PdfReader } from 'pdfreader';
 
 const products = ['LOCAL COMMERCIAL RICE', 'Carrot (Karot)', 'Eggplant (Talong)', 'Corn (White)', 'Corn (Yellow)', 'Tomato'];
@@ -9,26 +10,23 @@ export async function scrapeAndExtractPrices() {
   const url = 'https://www.da.gov.ph/price-monitoring/';
 
   try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    // Fetch the webpage HTML
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
 
-    // Get PDF Links
-    const pdfLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('#tablepress-65 tbody tr.row-2 td.column-1 a[href$=".pdf"]'))
-        .map(link => (link as HTMLAnchorElement).href);
-    });
+    // Extract PDF links from the page
+    const pdfLinks = $("#tablepress-65 tbody tr.row-2 td.column-1 a[href$='.pdf']")
+      .map((_, el) => $(el).attr("href"))
+      .get();
 
     if (!pdfLinks.length) {
       console.warn("No PDF links found.");
-      await browser.close();
       return { success: false, message: 'No PDF links found!' };
     }
 
-    const pdfUrl = pdfLinks[0];
+    const pdfUrl = pdfLinks[0]; // Get the latest PDF link
     console.log(`Reading PDF from: ${pdfUrl}`);
-    const response = await fetch(pdfUrl);
-    console.log(response)
+
     // Extract date from PDF URL
     const dateMatch = pdfUrl.match(/(\w+)-(\d+)-(\d{4})\.pdf$/);
     let date = '';
@@ -36,11 +34,14 @@ export async function scrapeAndExtractPrices() {
       const [_, month, day, year] = dateMatch;
       date = `${month} ${day}, ${year}`;
     }
-   
 
-    const buffer = Buffer.from(await response.arrayBuffer());
+    // Fetch the PDF file
+    const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(response.data);
     let items: string[] = [];
 
+
+    // Parse PDF
     await new Promise((resolve, reject) => {
       new PdfReader().parseBuffer(buffer, (err, item) => {
         if (err) {
@@ -56,6 +57,7 @@ export async function scrapeAndExtractPrices() {
 
     let priceInfoList: { product: string; range: string }[] = [];
 
+    // Extract prices
     products.forEach(product => {
       if (product === 'LOCAL COMMERCIAL RICE') {
         const riceCategories = ["Special", "Premium", "Well Milled", "Regular Milled"];
@@ -78,8 +80,6 @@ export async function scrapeAndExtractPrices() {
     });
 
     console.log(priceInfoList);
-    await browser.close();
-
     return { success: true, pdfLinks, data: priceInfoList, date };
 
   } catch (error) {
