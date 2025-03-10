@@ -37,6 +37,8 @@ export default function PriceDisplay() {
         setDate(response.date);
       } else {
         setError(response.message);
+        console.log(response.message);
+        console.log(response.error)
       }
     } catch (err) {
       console.error(err);

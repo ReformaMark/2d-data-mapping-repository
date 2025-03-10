@@ -84,6 +84,6 @@ export async function scrapeAndExtractPrices() {
 
   } catch (error) {
     console.error('Scraping Error:', error);
-    return { success: false, message: 'Scraping failed!' };
+    return { success: false, message: 'Scraping failed!', error: (error as Error).message };
   }
 }
