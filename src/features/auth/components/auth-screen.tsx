@@ -46,7 +46,7 @@ export const AuthScreen = () => {
                                         sizes="(max-width: 260px) 100vw, 260px"
                                     />
                                 </div>
-                                <span className="text-sm text-gray-600 mt-2">Barangay Mapinya & Balitucan</span>
+                                <span className="text-sm text-gray-600 mt-2">Sitio Mapinya & Balitucan</span>
                             </div>
                         </div>
                     </div>

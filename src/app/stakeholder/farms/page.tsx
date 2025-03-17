@@ -44,7 +44,7 @@ function FarmsPage() {
               </CardHeader>
               <div className="p-6 space-y-2">
                 <p className="text-sm font-semibold">
-                  Barangay: <span className="font-normal">{farm.mapMarker?.barangay}</span>
+                  Location: <span className="font-normal">{farm.mapMarker?.barangay}</span>
                 </p>
                 <p className="flex items-center text-sm font-semibold">
                   Current Crops: 

@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Id } from '../../../../convex/_generated/dataModel'
 import Loading from '@/components/loading'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -52,6 +52,8 @@ export default function Message() {
     const sendMessage = useMutation(api.chats.sendMessage)
     const [messageValue, setMessageValue] = useState('')
 
+    const read = useMutation(api.chats.readMessage)
+
 
     useEffect(() => {
         if (messengers?.length) {
@@ -74,10 +76,15 @@ export default function Message() {
                 success: "Message sent.",
                 error: "Unable to send your message."
             })
+            read({senderId: selectedMessenger.id})
             setMessageValue("")
         } else {
             toast.warning("Please select a user first.")
         }
+    }
+    const handleSelectMessenger = (messenger:MessengerTypes ) =>{
+        setSelectedMessenger(messenger)
+        read({senderId:messenger.id})
     }
 
     if (!messengers) return <Loading />
@@ -85,9 +92,9 @@ export default function Message() {
         <div className="z-[10] mt-10 md:mt-0 flex flex-col md:flex-row">
             <div className="w-full md:w-1/4 p-4 md:p-10 bg-gray-100">
                 <h2 className="text-xl font-semibold">Messengers</h2>
-                <ul>
+                <ul className='space-y-2'>
                     {messengers.length > 0 ? messengers.map((messenger, index) => (
-                        <li key={index} className="cursor-pointer p-2 space-y-2 bg-white hover:bg-gray-200 rounded-md" onClick={() => setSelectedMessenger(messenger)}>
+                        <li key={index} className={cn(messenger.unreadChat !== null ? "bg-green-50" : "bg-white","cursor-pointer p-2 space-y-2 relative hover:bg-gray-200 rounded-md")} onClick={() => handleSelectMessenger(messenger)}>
                             <div className="flex gap-x-3 items-center">
                                 <Avatar>
                                     <AvatarImage src={messenger?.senderUser?.image} alt={messenger?.senderUser?.lname} />
@@ -96,6 +103,7 @@ export default function Message() {
                                 <h1 className='font-semibold'>{messenger?.senderUser?.fname} {messenger?.senderUser?.lname}</h1>
                             </div>
                             <pre className='truncate text-xs text-gray-500'>Recent Message: {messenger?.latestMessage?.message}</pre>
+                          
                         </li>
                     )) : (
                         <h1>No messengers</h1>

@@ -74,7 +74,7 @@ export const addPlots = mutation({
 
         await ctx.db.insert("announcements", {
             title: `${marker.title}`,
-            content: `A new farm location titled "${marker.title}" has been added to barangay ${barangay.name}.`,
+            content: `A new farm location titled "${marker.title}" has been added to barangay/sitio ${barangay.name}.`,
             additionalInformation: plot._id,
             isActive: true
         });
@@ -391,11 +391,25 @@ export const getAgriculturalPlotWithBarangay = query({
         const barangayMap = new Map(
             barangays.map(b => [b!._id, b!.name])
         );
+        const data = await Promise.all(plots.map(async (plot) => {
+            const farmer = await ctx.db.get(plot.userId);
+            if(!farmer || !farmer.farmerProfile) return null
+            const barangay = await ctx.db.get(farmer?.farmerProfile?.barangayId)
+            
+            return {
+                ...plot,
+                farmer: {
+                    ...farmer,
+                    farmerProfile: {
+                        ...farmer.farmerProfile,
+                        barangay: barangay
+                    }
+                },
+                barangayName: barangayMap.get(plot.barangayId),
+            };
+        })).then(results => results.filter(result => result !== null));
 
-        // Add barangay name to each plot
-        return plots.map(plot => ({
-            ...plot,
-            barangayName: barangayMap.get(plot.barangayId)
-        }));
+      
+        return data;
     }
 });

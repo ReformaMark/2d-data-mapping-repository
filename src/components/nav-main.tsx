@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
 import Link from "next/link"
+import { useQuery } from "convex/react"
+import { api } from "../../convex/_generated/api"
 
 export function NavMain({
   items,
@@ -32,6 +34,9 @@ export function NavMain({
   }[]
 }) {
   const pathname = usePathname()
+   const messengers = useQuery(api.chats.getMessengers)
+
+   const hasUnreadChat = messengers?.some(m => m.unreadChat !== null)
 
   return (
     <SidebarGroup>
@@ -76,7 +81,7 @@ export function NavMain({
                   <SidebarMenuButton
                     tooltip={item.title}
                     className={cn(
-                      "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition",
+                      "text-sm relative group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition",
                       pathname === item.url ? "text-[#8BC34A] bg-gray-100" : "text-gray-600"
                     )}
                   >
@@ -91,11 +96,16 @@ export function NavMain({
                       "group-data-[state=open]/collapsible:rotate-90",
                       pathname === item.url ? "text-[#8BC34A]" : "text-gray-500"
                     )} />
+                    {(hasUnreadChat && item.title === "Communication") && (
+                      <div className="absolute transition-all duration-500 ease-linear top-0 right-0 bg-red-600 rounded-full size-3"></div>
+                    )}
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => (
+                      <>
+                      {subItem.title === "Direct Messages" ? (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton
                           asChild
@@ -103,12 +113,33 @@ export function NavMain({
                             "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition",
                             pathname === subItem.url ? "text-[#8BC34A] bg-gray-100" : "text-gray-600"
                           )}
-                        >
+                          >
+                          <Link href={subItem.url} className="relative">
+                            <span>{subItem.title}</span>
+                            {hasUnreadChat && (
+                              <div className="absolute top-0 right-0 bg-red-600 rounded-full size-3"></div>
+                            )}
+                          </Link>
+                         
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                      ): (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton
+                          asChild
+                          className={cn(
+                            "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:bg-gray-100 rounded-lg transition",
+                            pathname === subItem.url ? "text-[#8BC34A] bg-gray-100" : "text-gray-600"
+                          )}
+                          >
                           <Link href={subItem.url}>
                             <span>{subItem.title}</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
+                      )}
+                      
+                      </>
                     ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>

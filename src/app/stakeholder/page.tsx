@@ -36,13 +36,13 @@ function Dashboard() {
         <Link href="/stakeholder/production-analysis?search=Balitucan" className='contents'>
           <Card className="group hover:shadow-lg transition-shadow duration-200 p-0 space-y-5">
             <CardHeader className='p-0'>
-              <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Barangay Balitucan</CardTitle>
+              <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Sitio Balitucan</CardTitle>
             </CardHeader>
             <CardContent className='p-0 flex flex-col justify-between '>
               <div className="relative w-36 h-36 md:w-40 md:h-40 mb-4 overflow-hidden rounded-full mx-auto">
                 <Image
                   src={Balitucan}
-                  alt="Barangay Balitucan"
+                  alt="Sitio Balitucan"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-full"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -50,20 +50,20 @@ function Dashboard() {
               </div>
             </CardContent>
             <CardFooter className='text-muted-foreground px-8 md:px-10 py-4 md:py-5 bg-gray-50 h-20 md:h-24 min-h-fit'>
-              Barangay Balitucan focuses on Corns and Rice as well as few other crops such as tomatoes and carrots.
+              Sitio Balitucan focuses on Corns and Rice as well as few other crops such as tomatoes and carrots.
             </CardFooter>
           </Card>
         </Link>
         <Link href="/stakeholder/production-analysis?search=Mapinya" className='contents'>
           <Card className="group hover:shadow-lg transition-shadow duration-200 p-0 space-y-5">
             <CardHeader className='p-0'>
-              <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Barangay Mapinya</CardTitle>
+              <CardTitle className='text-center text-white uppercase py-3 md:py-4 bg-green-500'>Sitio Mapinya</CardTitle>
             </CardHeader>
             <CardContent className='p-0 flex flex-col justify-between '>
               <div className="relative w-36 h-36 md:w-40 md:h-40 mb-4 overflow-hidden rounded-full mx-auto">
                 <Image
                   src={MaPinya}
-                  alt="Barangay Ma Pinya"
+                  alt="Sitio Ma Pinya"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-200 rounded-full"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -71,7 +71,7 @@ function Dashboard() {
               </div>
             </CardContent>
             <CardFooter className='text-muted-foreground px-8 md:px-10 py-4 md:py-5 bg-gray-50 h-20 md:h-24 min-h-fit'>
-              Barangay Mapinya are also focused on Corns and Rice along with Eggplant and tomatoes.
+              Sitio Mapinya are also focused on Corns and Rice along with Eggplant and tomatoes.
             </CardFooter>
           </Card>
         </Link>

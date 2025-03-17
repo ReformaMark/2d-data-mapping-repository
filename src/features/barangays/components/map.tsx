@@ -24,6 +24,8 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import Image from 'next/image'
 import { useCurrentUser } from "@/features/users/api/use-current-user"
+import Message from './message'
+
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -46,8 +48,6 @@ function MyMap() {
     zoom: 15     // Zoomed out to show all 3 barangays
   })
 
-  console.log(crops)
-  console.log(agriculturalPlot)
   
   const [searchQuery, setSearchQuery] = useState(search || "")
   const [selectedBarangay, setSelectedBarangay] = useState<string | null>(null)
@@ -163,7 +163,7 @@ function MyMap() {
       <Card>
         <CardContent className="pt-6 flex items-center space-x-2">
           <Input
-            placeholder="Search barangays..."
+            placeholder="Search barangays/sitio..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="max-w-sm"
@@ -236,7 +236,7 @@ function MyMap() {
                     <div className="p-4 space-y-2">
                       <p className="font-bold text-lg capitalize">{marker.title}</p>
                       <p className="text-sm text-gray-700"><span className="font-semibold">Current Crop Type:</span> <span className="font-medium">{marker.markerType}</span></p>
-                      <p className="text-sm text-gray-700"><span className="font-semibold">Barangay:</span> <span className="font-medium">{marker.barangay}</span></p>
+                      <p className="text-sm text-gray-700"><span className="font-semibold">Location:</span> <span className="font-medium">{marker.barangay}</span></p>
             
                       {agriculturalPlot?.some(plot => plot.markerId === marker._id) && (
                         <div className="space-y-1">
@@ -261,18 +261,31 @@ function MyMap() {
                           <p className="text-sm text-gray-700"><span className="font-semibold">Status:</span> <Badge className="ml-1">{agriculturalPlot.find(plot => plot.markerId === marker._id)?.status}</Badge></p>
                         </div>
                       )}
-                      <div className="flex justify-end mt-2">
+                      <div className="">
+                        <h1 className='font-semibold text-sm'>Farmer Details</h1>
+                      
+                        <div className="mt-2 font-semibold">
+                            <h3>Name: <span className='font-normal'>{`${agriculturalPlot?.find(plot => plot.markerId === marker._id)?.farmer?.fname} ${agriculturalPlot?.find(plot => plot.markerId === marker._id)?.farmer?.lname}`}</span></h3>
+                          <h3>Contact Number: <span className='font-normal'>{agriculturalPlot?.find(plot => plot.markerId === marker._id)?.farmer?.farmerProfile?.contactNumber}</span></h3>
+                          <h3>Barangay/Sitio: <span className='font-normal'>{agriculturalPlot?.find(plot => plot.markerId === marker._id)?.farmer?.farmerProfile?.barangay?.name}</span></h3>
+                        </div>
+                      </div>
+                        <div className="flex justify-between items-center mt-2">
                         <Button 
                           variant="link" 
                           onClick={() => {
-                            const find = agriculturalPlot?.find(plot => plot.markerId === marker._id)
-                            if (!find?._id) return
-                            handleMoreDetails(marker._id)
+                          const find = agriculturalPlot?.find(plot => plot.markerId === marker._id)
+                          if (!find?._id) return
+                          handleMoreDetails(marker._id)
                           }}
                         >
                           More Details
                         </Button>
-                      </div>
+                        <div className="z-50">
+
+                          <Message farmId={agriculturalPlot?.find(plot => plot.markerId === marker._id)?._id} />
+                        </div>
+                        </div>
                     </div>
                   </Popup>
                 </Marker>
@@ -282,7 +295,7 @@ function MyMap() {
         })}
       </MapContainer>
       <div className="text-center text-xl font-semibold my-4">
-        {selectedBarangay ? `Production Analysis for ${selectedBarangay}` : 'Production Analysis for All Barangays'}
+        {selectedBarangay ? `Production Analysis for ${selectedBarangay}` : 'Production Analysis for All Locations'}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>

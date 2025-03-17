@@ -1,6 +1,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { asyncMap } from "convex-helpers";
 
 export const getMessengers = query({
     handler: async (ctx) => {
@@ -17,8 +18,14 @@ export const getMessengers = query({
         const latestMessages = await Promise.all(uniqueMessengers.map(async (id) => {
             const senderUser = await ctx.db.get(id)
             const latestMessage = await ctx.db.query('chats').filter(q=> q.eq(q.field('senderId'), id)).order('desc').first()
-
-            return { id, senderUser, latestMessage };
+           //null if all chat are already read
+            const unreadChat = await ctx.db.query('chats')
+            .filter(q => q.eq(q.field("senderId"), id))
+            .filter(q => q.eq(q.field("receiverId"), userId))
+            .filter(q => q.eq(q.field("isRead"), false))
+            .first()
+            
+            return { id, senderUser, latestMessage, unreadChat };
         }));
         
         return latestMessages;
@@ -70,6 +77,28 @@ export const sendMessage = mutation({
 
         return message
     },
+})
+
+export const readMessage = mutation({
+    args:{
+        senderId: v.id('users')
+    }, 
+    handler: async(ctx, args) =>{
+        const userId = await getAuthUserId(ctx)
+        if(userId === null) return
+
+        const notReadChats = await ctx.db.query('chats')
+            .filter(q => q.eq(q.field("senderId"), args.senderId))
+            .filter(q => q.eq(q.field("receiverId"), userId))
+            .filter(q => q.eq(q.field("isRead"), false))
+            .collect()
+    await asyncMap(notReadChats, async(chat) =>{
+        await ctx.db.patch(chat._id, {
+            isRead: true
+        })
+
+    })
+    }
 })
 
 export const getChats = query({
