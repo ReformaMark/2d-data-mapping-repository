@@ -84,7 +84,7 @@ export const getBarangayDetails = query({
         // Get farmers count
         const farmers = await ctx.db
             .query("users")
-            .filter((q) => 
+            .filter((q) =>
                 q.and(
                     q.eq(q.field("role"), "farmer"),
                     q.eq(q.field("farmerProfile.barangayId"), barangay._id)
@@ -104,7 +104,7 @@ export const getBarangayDetails = query({
 
         const productionData = await ctx.db
             .query("productionData")
-            .filter((q) => 
+            .filter((q) =>
                 q.and(
                     q.eq(q.field("barangayId"), barangay._id),
                     q.eq(q.field("year"), currentYear),
@@ -420,7 +420,7 @@ export const createFarmer = mutation({
 
             // @ts-expect-error - TODO: fix this
             const accountResponse = await createAccount(ctx, {
-                provider: "password",
+                provider: "password-code",
                 account: {
                     id: email,
                     secret: password,
@@ -492,7 +492,7 @@ export const createAdmin = mutation({
 
             // @ts-expect-error - TODO: fix this
             const accountResponse = await createAccount(ctx, {
-                provider: "password",
+                provider: "password-code",
                 account: {
                     id: email,
                     secret: password,

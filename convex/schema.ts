@@ -27,8 +27,10 @@ const schema = defineSchema({
             contactNumber: v.string(),
             isActive: v.boolean(),
         })),
+        emailVerificationTime: v.optional(v.number()),
+        isVerified: v.optional(v.boolean()),
     })
-        .index("by_email", ["email"])
+        .index('email', ['email'])
         .index("by_role", ["role"])
         .index("by_farmerProfile_barangayId", ["farmerProfile.barangayId"]),
 
@@ -60,7 +62,7 @@ const schema = defineSchema({
         title: v.string(),
         description: v.optional(v.string()),
         markerType: v.string(), // "plot" | "landmark" | "facility"
-       
+
         yields: v.optional(v.number()),
     }).index("by_userId", ["userId"]),
 
@@ -219,8 +221,8 @@ const schema = defineSchema({
         message: v.string(), // Content of the message
         isRead: v.boolean(), // Whether the message has been read
     }).index("by_sender_receiver", ["senderId", "receiverId"])
-      .index("by_receiver", ["receiverId"])
+        .index("by_receiver", ["receiverId"])
 });
- 
+
 
 export default schema;
