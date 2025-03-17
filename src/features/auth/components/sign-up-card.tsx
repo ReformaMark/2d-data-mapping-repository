@@ -102,8 +102,7 @@ export const SignUpCard = ({
                 code: verificationCode,
                 flow: "email-verification",
             })
-            // Successful verification will automatically log the user in
-            router.push("/dashboard")
+
         } catch (error) {
             console.error(error)
             toast.error("Invalid verification code. Please try again")
