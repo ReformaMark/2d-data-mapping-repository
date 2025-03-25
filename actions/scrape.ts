@@ -66,7 +66,8 @@ export async function scrapeAndExtractPrices() {
           if (index !== -1) {
             const lowPrice = items[index + 1] || '';
             const highPrice = items[index + 3] || '';
-            priceInfoList.push({ product: `${category} Rice`, range: `₱ ${lowPrice} - ₱ ${highPrice}` });
+            const validHighPrice = isNaN(Number(highPrice)) ? lowPrice : highPrice;
+            priceInfoList.push({ product: `${category} Rice`, range: `₱ ${lowPrice} - ₱ ${validHighPrice}` });
           }
         });
       } else {
@@ -74,7 +75,8 @@ export async function scrapeAndExtractPrices() {
         if (index !== -1) {
           const lowPrice = items[index + 1] || '';
           const highPrice = items[index + 3] || '';
-          priceInfoList.push({ product, range: `₱ ${lowPrice} - ₱ ${highPrice}` });
+          const validHighPrice = isNaN(Number(highPrice)) ? lowPrice : highPrice;
+          priceInfoList.push({ product, range: `₱ ${lowPrice} - ₱ ${validHighPrice}` });
         }
       }
     });
