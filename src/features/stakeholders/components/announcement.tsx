@@ -58,7 +58,7 @@ export default function Announcement() {
           )}
           {announcements && announcements.length > 5 && (
             <CardFooter className="flex justify-end">
-              <Link href="/stakeholder/announcements">See All</Link>
+              <Link href="/announcements">See All</Link>
             </CardFooter>
           )}
         </Card>
